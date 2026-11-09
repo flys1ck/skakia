@@ -3,7 +3,6 @@ import { extractLichessGameId, isLichessGameFinished } from "./lichess";
 import styles from "./floating-button.css?inline";
 
 const HOST_ID = "skakia-floating-button-host";
-const HIDDEN_CLASS = "skakia-floating-button-hidden";
 const SKAKIA_SCHEME = "com.skakia.app";
 const SYNC_INTERVAL_MS = 1000;
 
@@ -60,7 +59,7 @@ export function stopFloatingButtonSync(): void {
 export function showFloatingButton(): void {
   const existingHost = document.getElementById(HOST_ID);
   if (existingHost) {
-    existingHost.classList.remove(HIDDEN_CLASS);
+    existingHost.inert = false;
     return;
   }
 
@@ -87,10 +86,12 @@ export function showFloatingButton(): void {
 }
 
 /**
- * Fades out the floating button if present.
+ * Fades out the floating button if present. `inert` also takes it out of the tab order, so it cannot be triggered from
+ * the keyboard while a game is still being played.
  */
 export function hideFloatingButton(): void {
-  document.getElementById(HOST_ID)?.classList.add(HIDDEN_CLASS);
+  const host = document.getElementById(HOST_ID);
+  if (host) host.inert = true;
 }
 
 /**

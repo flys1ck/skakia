@@ -5,5 +5,5 @@
   "sortPackageJson": false,
   "sortImports": { "newlinesBetween": false },
   "jsdoc": { "commentLineStrategy": "multiline", "preferCodeFences": true, "descriptionWithDot": true },
-  "ignorePatterns": ["dist"]
+  "ignorePatterns": [".output", ".wxt"]
 }

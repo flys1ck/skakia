@@ -2,10 +2,6 @@
   all: initial;
 }
 
-:host(.skakia-floating-button-hidden) {
-  pointer-events: none;
-}
-
 .skakia-floating-button {
   position: fixed;
   right: 0;
@@ -31,7 +27,7 @@
   animation: skakia-floating-button-idle 4.2s ease-in-out infinite;
 }
 
-:host(.skakia-floating-button-hidden) .skakia-floating-button {
+:host([inert]) .skakia-floating-button {
   opacity: 0;
 }
 
@@ -70,7 +66,7 @@
   transform: translateY(-50%) translateX(0);
 }
 
-:host(.skakia-floating-button-hidden) .skakia-floating-button-label {
+:host([inert]) .skakia-floating-button-label {
   opacity: 0;
 }
 
