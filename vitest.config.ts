@@ -5,6 +5,6 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
-    include: ["src/**/*.spec.ts"],
+    include: ["src/**/*.spec.ts", "packages/*/src/**/*.spec.ts"],
   },
 });

@@ -1,24 +1,31 @@
 {
   "name": "skakia-extension",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "build:edge": "wxt build -b edge",
+    "build:safari": "wxt build -b safari",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "zip:edge": "wxt zip -b edge",
+    "postinstall": "wxt prepare",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint --fix",
     "lint:check": "oxlint",
-    "types:check": "tsc -b --noEmit"
+    "types:check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^3.0.0",
-    "@types/chrome": "^0.3.5",
     "oxfmt": "^0.73.0",
     "oxlint": "^1.88.0",
     "typescript": "^6.0.3",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5",
+    "wxt": "^0.21.5"
   }
 }

@@ -29,6 +29,9 @@ jobs:
       - run: bun run lint:check
       - run: bun run types:check
       - run: bun run test:unit --run
+      - name: Build browser extension
+        working-directory: packages/skakia-extension
+        run: bun run build && bun run build:firefox
 
   build:
     name: Build

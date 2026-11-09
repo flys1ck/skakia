@@ -16,7 +16,7 @@
     "lint:check": "oxlint && bun run --filter '*' lint:check",
     "test:bench": "vitest bench",
     "test:unit": "vitest",
-    "types:check": "vue-tsc --noEmit"
+    "types:check": "vue-tsc --noEmit && bun run --filter '*' types:check"
   },
   "dependencies": {
     "@flys1ck/lichess-client": "workspace:*",

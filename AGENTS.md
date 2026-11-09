@@ -16,7 +16,7 @@ bun run dev:worktree     # Same, isolated per git worktree (see Parallel worktre
 bun run build            # TypeScript check + Vite build
 bun tauri build          # Full desktop app build
 
-# Code quality (run fmt, lint and types:check before committing; fmt and lint also cover workspace packages)
+# Code quality (run fmt, lint and types:check before committing; all three also cover workspace packages)
 bun run fmt              # Format with oxfmt
 bun run fmt:check        # Check formatting only
 bun run lint             # Lint with oxlint (auto-fix)
@@ -24,7 +24,7 @@ bun run lint:check       # Lint check without fixes
 bun run types:check      # TypeScript type checking
 
 # Testing
-bun run test:unit        # Run Vitest unit tests
+bun run test:unit        # Run Vitest unit tests (app and workspace packages)
 bun run test:bench       # Run benchmarks
 
 # Database
