@@ -11,7 +11,7 @@ export default defineConfig({
     ...(browser === "firefox" && {
       browser_specific_settings: {
         gecko: {
-          id: "extension@skakia.app",
+          id: "extension@skakia.com",
           // First release where desktop and Android both understand data_collection_permissions, which AMO requires.
           strict_min_version: "142.0",
           data_collection_permissions: { required: ["none"] },
