@@ -14,10 +14,12 @@
         {{ node.move.san }}<span v-if="resolvedAnnotation">{{ resolvedAnnotation }}</span>
       </button>
     </template>
-    <!-- black's move after a previous comment -->
+    <!-- black's move that starts a row: first move of the game, or after a comment or variation -->
     <template
       v-else-if="
-        (node.previousPosition?.previousPosition?.variations.length || node.previousPosition?.comment) &&
+        (!node.previousPosition?.move ||
+          node.previousPosition.previousPosition?.variations.length ||
+          node.previousPosition.comment) &&
         node.ply % 2 === 0
       "
     >
@@ -47,11 +49,9 @@
     </template>
   </template>
   <template v-if="node.comment || node.previousPosition?.variations.length">
-    <span
-      v-if="(node.comment || node.previousPosition?.variations.length) && node.ply % 2 === 1"
-      class="text-muted-foreground col-span-7 pl-4"
-      >{{ node.nextPosition && "..." }}</span
-    >
+    <span v-if="node.move && node.ply % 2 === 1" class="text-muted-foreground col-span-7 pl-4">{{
+      node.nextPosition && "..."
+    }}</span>
     <div
       class="bg-muted text-muted-foreground relative col-span-full p-2 text-xs wrap-break-word shadow-inner 2xl:text-sm"
     >
