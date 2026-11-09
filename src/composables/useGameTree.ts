@@ -163,7 +163,9 @@ export function useGameTree() {
     while (node && node.move) {
       const san = toSAN(node.move);
       // move number
-      pgn += node.move.piece.color === "white" ? `${node.ply}. ` : "";
+      const moveNumber = Math.ceil(node.ply / 2);
+      if (node.move.piece.color === "white") pgn += `${moveNumber}. `;
+      else if (node === root.value.nextPosition) pgn += `${moveNumber}... `;
       // SAN notation
       pgn += `${san} `;
       // TODO: checkmate
