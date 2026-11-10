@@ -15,6 +15,7 @@
           </Button>
         </template>
       </BaseToolbar>
+      <ExtensionBanner v-if="extensionPromo.isBannerVisible" class="mb-4" />
       <TabsContent v-for="option in GAME_SOURCES" :key="option.value" :value="option.value">
         <template v-if="isSourceConnected">
           <LichessGameList v-if="option.value === 'lichess'" ref="lichessGameList" />
@@ -41,11 +42,13 @@
 import BaseContainer from "@components/base/BaseContainer.vue";
 import BaseToolbar from "@components/base/BaseToolbar.vue";
 import ChessDotComGameList from "@components/games/ChessDotComGameList.vue";
+import ExtensionBanner from "@components/games/ExtensionBanner.vue";
 import LichessGameList from "@components/games/LichessGameList.vue";
 import { navigationItems } from "@data/navigationItems";
 import { RefreshCw, Unplug } from "@lucide/vue";
 import { useBreadcrumbs } from "@stores/useBreadcrumbs";
 import { useChessDotCom } from "@stores/useChessDotCom";
+import { useExtensionPromo } from "@stores/useExtensionPromo";
 import { useLichess } from "@stores/useLichess";
 import { useSettingsDialog } from "@stores/useSettingsDialog";
 import { computed, ref } from "vue";
@@ -69,6 +72,7 @@ const router = useRouter();
 const lichess = useLichess();
 const chessDotCom = useChessDotCom();
 const settingsDialog = useSettingsDialog();
+const extensionPromo = useExtensionPromo();
 
 const source = computed<GameSource>({
   get() {

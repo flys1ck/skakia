@@ -44,6 +44,9 @@
         },
         {
           "url": "https://chess.com/*"
+        },
+        {
+          "url": "https://skakia.com/*"
         }
       ]
     },

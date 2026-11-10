@@ -1,3 +1,4 @@
+import { useExtensionPromo } from "@stores/useExtensionPromo";
 import { getCurrent, onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import type { Router } from "vue-router";
 
@@ -36,7 +37,10 @@ export function parseAppDeepLink(url: string): string | null {
 export async function initDeepLinks(router: Router): Promise<void> {
   const navigate = async (urls: string[]) => {
     const path = parseAppDeepLink(urls[0]);
-    if (path) await router.push(path);
+    if (!path) return;
+
+    useExtensionPromo().hasOpenedGameLink = true;
+    await router.push(path);
   };
 
   const urls = await getCurrent();
