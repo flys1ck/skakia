@@ -1,4 +1,4 @@
-import type { Key } from "chessground/types";
+import type { Key } from "@lichess-org/chessground/types";
 import type { Rules } from "chessops";
 import { Chess } from "chessops/chess";
 import { INITIAL_BOARD_FEN, INITIAL_FEN, makeFen, parseFen } from "chessops/fen";

@@ -1,10 +1,10 @@
 import { Position, useChessground } from "@composables/useChessground";
 import { ChessMove, PositionNode, useGameTree } from "@composables/useGameTree";
+import { DrawShape } from "@lichess-org/chessground/draw";
+import { Color, Key, Piece } from "@lichess-org/chessground/types";
+import { key2pos } from "@lichess-org/chessground/util";
 import { playAudio } from "@utilities/audio";
 import { getPositionKey, getPossibleMoves, isPromotion } from "@utilities/move";
-import { DrawShape } from "chessground/draw";
-import { Color, Key, Piece } from "chessground/types";
-import { key2pos } from "chessground/util";
 import { Chess } from "chessops/chess";
 import { makeFen, parseFen } from "chessops/fen";
 import { makeSanAndPlay } from "chessops/san";

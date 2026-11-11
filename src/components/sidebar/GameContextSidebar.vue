@@ -136,6 +136,8 @@ import GameEvaluation from "@components/sidebar/GameEvaluation.vue";
 import GamePositions from "@components/sidebar/GamePositions.vue";
 import GameTreeItem from "@components/sidebar/GameTreeItem.vue";
 import { useGame } from "@composables/useGame";
+import { DrawShape } from "@lichess-org/chessground/draw";
+import { Key } from "@lichess-org/chessground/types";
 import {
   ArrowDown,
   ArrowLeft,
@@ -148,8 +150,6 @@ import {
   FlipVertical2,
   Plus,
 } from "@lucide/vue";
-import { DrawShape } from "chessground/draw";
-import { Key } from "chessground/types";
 import { ref } from "vue";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";

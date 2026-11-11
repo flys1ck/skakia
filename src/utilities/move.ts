@@ -1,5 +1,5 @@
 import { ChessMove } from "@composables/useGameTree";
-import { Key, Role } from "chessground/types";
+import { Key, Role } from "@lichess-org/chessground/types";
 import { Chess } from "chessops/chess";
 import { chessgroundDests } from "chessops/compat";
 import { parseFen } from "chessops/fen";

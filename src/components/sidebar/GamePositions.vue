@@ -165,12 +165,12 @@ import BaseSidebarSectionHeading from "@components/base/BaseSidebarSectionHeadin
 import GameResultTag from "@components/sidebar/GameResultTag.vue";
 import { useGame } from "@composables/useGame";
 import { explorerClient, mastersDatabase, type OpeningExplorerMasters } from "@flys1ck/lichess-client";
+import { Key } from "@lichess-org/chessground/types";
 import { db, select } from "@services/database";
 import { useStudyOrigin } from "@stores/useStudyOrigin";
 import { keepPreviousData, useQuery } from "@tanstack/vue-query";
 import { roundToFixed } from "@utilities/math";
 import { getPositionKey } from "@utilities/move";
-import { Key } from "chessground/types";
 import type { Selectable } from "kysely";
 import { computed, shallowRef, watchEffect } from "vue";
 import type { Chapters, ChessPositions, Lines, Positions, Studies } from "@/database";

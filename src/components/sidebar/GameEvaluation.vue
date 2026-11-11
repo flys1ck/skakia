@@ -57,10 +57,10 @@
 <script setup lang="ts">
 import BaseSliderField from "@components/base/BaseSliderField.vue";
 import { useEvaluation } from "@composables/useEvaluation";
+import { Key } from "@lichess-org/chessground/types";
 import { Settings2 } from "@lucide/vue";
 import { useSettings } from "@stores/useSettings";
 import { getMovesStringFromUci } from "@utilities/moves";
-import { Key } from "chessground/types";
 import { storeToRefs } from "pinia";
 import { Ref, computed, onUnmounted, watch } from "vue";
 import { Button } from "@/components/ui/button";
