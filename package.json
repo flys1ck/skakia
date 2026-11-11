@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@flys1ck/lichess-client": "workspace:*",
+    "@lichess-org/chessground": "^10.5.0",
     "@lucide/vue": "^1.57.0",
     "@tanstack/vue-query": "^5.104.4",
     "@tauri-apps/api": "^2.12.4",
@@ -35,7 +36,6 @@
     "@types/howler": "^2.2.13",
     "@vueuse/core": "^15.0.0",
     "better-sqlite3": "^13.0.3",
-    "chessground": "^9.2.1",
     "chessops": "^0.15.1",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",

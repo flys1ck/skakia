@@ -1,7 +1,7 @@
+import { Chessground } from "@lichess-org/chessground";
+import { DrawShape } from "@lichess-org/chessground/draw";
+import { Color, Dests, Key, Piece } from "@lichess-org/chessground/types";
 import { getPossibleMoves } from "@utilities/move";
-import { Chessground } from "chessground";
-import { DrawShape } from "chessground/draw";
-import { Color, Dests, Key, Piece } from "chessground/types";
 
 export interface Position {
   fen: string;
@@ -34,6 +34,12 @@ export function useChessground(element: HTMLElement, options: UseChessgroundOpti
       move: options.onMove,
     },
   });
+
+  // Chessground caches the board rect and only refreshes it on resize or scroll. A board that moves without
+  // resizing (a sidebar collapsing beside a height-bound board) would map clicks to the wrong squares.
+  for (const eventName of ["mousedown", "touchstart"]) {
+    element.addEventListener(eventName, () => chessground.state.dom.bounds.clear(), { capture: true, passive: true });
+  }
 
   function setPosition(position: Position) {
     chessground.set({

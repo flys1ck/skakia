@@ -1,6 +1,6 @@
+import { Key, Piece } from "@lichess-org/chessground/types";
 import { formatComment } from "@utilities/comment";
 import { toSAN } from "@utilities/move";
-import { Key, Piece } from "chessground/types";
 import { NormalMove, Position, makeSquare } from "chessops";
 import { makeFen, parseFen } from "chessops/fen";
 import { ChildNode, PgnNodeData, parsePgn, startingPosition } from "chessops/pgn";

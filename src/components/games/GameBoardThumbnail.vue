@@ -3,10 +3,10 @@
 </template>
 
 <script setup lang="ts">
+import { Chessground } from "@lichess-org/chessground";
+import type { Api } from "@lichess-org/chessground/api";
 import { type FinalPosition } from "@utilities/moves";
 import { useIntersectionObserver } from "@vueuse/core";
-import { Chessground } from "chessground";
-import type { Api } from "chessground/api";
 import { onUnmounted, ref, watch } from "vue";
 
 const props = defineProps<{
