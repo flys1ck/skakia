@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @import "tw-animate-css";
 @import "shadcn-vue/tailwind.css";
+@import "@fontsource-variable/crimson-pro";
 @source "../../**/*.vue";
 @source "../../**/*.ts";
 @source "../../../index.html";
@@ -10,6 +11,7 @@
   --font-sans:
     Inter var, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Noto Color Emoji";
+  --font-serif: "Crimson Pro Variable", ui-serif, Georgia, serif;
 
   --grid-template-columns-16: repeat(16, minmax(0, 1fr));
 

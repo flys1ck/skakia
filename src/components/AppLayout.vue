@@ -2,10 +2,11 @@
   <SidebarProvider class="h-screen overflow-hidden">
     <NavigationSidebar />
     <SidebarInset class="min-w-0 overflow-y-auto">
-      <div class="flex min-h-0 min-w-0 grow flex-col overflow-y-auto">
-        <header class="flex h-12 shrink-0 items-center gap-2 border-b px-2 transition-[width,height] ease-linear">
-          <SidebarTrigger class="ml-1" />
-          <Separator orientation="vertical" class="mr-2" />
+      <div
+        class="flex min-h-0 min-w-0 grow flex-col bg-[linear-gradient(to_right_in_oklab,var(--color-rose-100),var(--color-mauve-100)_240px)]"
+      >
+        <header class="flex h-12 shrink-0 items-center gap-3 pr-3 pl-4 transition-[width,height] ease-linear">
+          <SidebarTrigger class="mr-2 hover:bg-white/20 active:bg-white/30" />
           <template v-if="studyOrigin.returnLink">
             <Button variant="outline" size="sm" class="shrink-0" as-child>
               <RouterLink :to="studyOrigin.returnLink.to">
@@ -21,12 +22,12 @@
                 <BreadcrumbSeparator v-if="i !== 0" />
                 <BreadcrumbItem>
                   <BreadcrumbPage v-if="i === breadcrumbsStore.breadcrumbs.length - 1" class="flex items-center gap-2">
-                    <Component v-if="breadcrumb.icon" :is="breadcrumb.icon" class="size-4 shrink-0" />
+                    <Component v-if="breadcrumb.icon" :is="breadcrumb.icon" class="size-5 shrink-0" />
                     {{ breadcrumb.name }}
                   </BreadcrumbPage>
                   <BreadcrumbLink v-else as-child>
                     <RouterLink :to="breadcrumb.to" class="flex items-center gap-2">
-                      <Component v-if="breadcrumb.icon" :is="breadcrumb.icon" class="size-4 shrink-0" />
+                      <Component v-if="breadcrumb.icon" :is="breadcrumb.icon" class="size-5 shrink-0" />
                       {{ breadcrumb.name }}
                     </RouterLink>
                   </BreadcrumbLink>
@@ -40,11 +41,15 @@
           Suspense must stay inside RouterView: around it, Vue holds back RouterView updates while an async page is pending, and a page that fails to load blocks navigation.
           timeout="0" unmounts the previous page right away: kept alive, its route param watchers would fire with the next route's params.
         -->
-        <RouterView v-slot="{ Component: page }">
-          <Suspense v-if="page" :timeout="0">
-            <Component :is="page" />
-          </Suspense>
-        </RouterView>
+        <div
+          class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-tl-xl border-t border-l shadow-[inset_1px_1px_6px_-2px_rgb(77_2_24/0.12)]"
+        >
+          <RouterView v-slot="{ Component: page }">
+            <Suspense v-if="page" :timeout="0">
+              <Component :is="page" />
+            </Suspense>
+          </RouterView>
+        </div>
       </div>
     </SidebarInset>
     <SettingsDialog />
