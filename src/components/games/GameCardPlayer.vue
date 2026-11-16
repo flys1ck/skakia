@@ -1,8 +1,8 @@
 <template>
   <div class="flex min-w-0 items-center gap-2 text-sm">
     <span
-      class="size-3 shrink-0 rounded-xs border border-neutral-400"
-      :class="color === 'white' ? 'bg-white' : 'bg-neutral-900'"
+      class="size-3 shrink-0 rounded-xs border border-mauve-400"
+      :class="color === 'white' ? 'bg-white' : 'bg-mauve-900'"
       aria-hidden="true"
     />
     <span class="sr-only">{{ color === "white" ? "White" : "Black" }}:</span>
