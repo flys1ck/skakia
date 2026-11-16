@@ -1,0 +1,84 @@
+---
+import "../styles/global.css";
+import AppScreenshot from "../components/AppScreenshot.astro";
+import Download from "../components/Download.astro";
+import { fetchLatestRelease, RELEASES_URL, REPOSITORY_URL } from "../lib/release";
+
+const release = await fetchLatestRelease();
+
+const title = "Skakia: Chess opening preparation for desktop";
+const description =
+  "Skakia is a desktop app for studying chess openings. Connect your Lichess and Chess.com games, check your preparation and analyse with Stockfish on macOS, Windows and Linux.";
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const socialImageUrl = new URL("/logo.png", Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <meta name="theme-color" content="#fbf9fb" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Skakia" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body class="bg-page relative min-h-svh overflow-x-clip text-mauve-600 antialiased">
+    <div class="checkerboard pointer-events-none absolute inset-x-0 top-0 h-svh min-h-[640px]" aria-hidden="true"></div>
+
+    <div class="relative">
+      <header class="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4 sm:px-6">
+        <a href="/" class="flex items-center gap-2.5 rounded-md text-mauve-950">
+          <img src="/logo.svg" width="28" height="28" alt="Skakia logo: a chess knight" class="size-7" />
+          <span class="text-[17px] font-semibold tracking-tight">Skakia</span>
+        </a>
+        <nav aria-label="Main" class="flex items-center gap-6 text-sm font-medium">
+          <a href={REPOSITORY_URL} class="link">
+            GitHub
+          </a>
+          <a href="#download" class="link">
+            Download
+          </a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="flex min-h-[calc(85svh-4rem)] flex-col items-center px-4 pt-16 pb-12 text-center md:pt-[120px]">
+          <h1 class="max-w-[760px] font-serif text-[clamp(2.75rem,1.6rem+5.2vw,5.25rem)] leading-none font-normal tracking-[-0.015em] text-balance text-mauve-950">
+            Learn your Chess Openings with <em>Confidence</em>
+          </h1>
+          <p class="mt-6 max-w-[560px] text-lg leading-[1.6] text-pretty">
+            Skakia is your modern-day companion for studying chess openings. Connect your played games, check your
+            preparation, deepen your opening understanding and elevate your gameplay.
+          </p>
+          <Download release={release} allDownloadsUrl={RELEASES_URL} />
+        </section>
+
+        <AppScreenshot />
+      </main>
+
+      <footer class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-2 gap-y-1 px-4 py-8 text-sm sm:px-6">
+        <span>© {new Date().getFullYear()} Skakia</span>
+        <span aria-hidden="true">·</span>
+        <a href={REPOSITORY_URL} class="link">
+          GitHub
+        </a>
+        {release.version && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>{release.version}</span>
+          </>
+        )}
+      </footer>
+    </div>
+  </body>
+</html>

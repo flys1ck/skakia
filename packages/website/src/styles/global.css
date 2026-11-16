@@ -1,0 +1,57 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/crimson-pro";
+@import "@fontsource-variable/crimson-pro/wght-italic.css";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Crimson Pro Variable", ui-serif, Georgia, serif;
+
+  /* Tailwind's mauve-50 has no chroma; this keeps the hue of the rest of the scale. */
+  --color-page: oklch(98.5% 0.003 325.6);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-page);
+    color: var(--color-mauve-600);
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-rose-700);
+    outline-offset: 3px;
+  }
+}
+
+@utility link {
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-mauve-300);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  border-radius: 2px;
+
+  &:hover {
+    color: var(--color-mauve-950);
+    text-decoration-color: currentColor;
+  }
+}
+
+/*
+ * One 400px tile holds a 2x2 block of 200px squares. The hex values are mauve-100 (squares) and mauve-200 (lines),
+ * because a data URI cannot read the theme variables.
+ */
+.checkerboard {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cpath fill='%23f3f1f3' d='M0 0h200v200H0zM200 200h200v200H200z'/%3E%3Cpath fill='%23e7e4e7' d='M0 0h400v1H0zM0 200h400v1H0zM0 0h1v400H0zM200 0h1v400h-1z'/%3E%3C/svg%3E");
+  background-position: 50% -1px;
+  background-size: 400px 400px;
+  -webkit-mask-image: radial-gradient(100% 100% at 0 0, #000 15%, transparent 90%);
+  mask-image: radial-gradient(100% 100% at 0 0, #000 15%, transparent 90%);
+}

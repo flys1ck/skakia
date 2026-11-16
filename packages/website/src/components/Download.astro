@@ -1,0 +1,108 @@
+---
+import type { Platform, Release } from "../lib/release";
+import PlatformIcon from "./PlatformIcon.astro";
+
+interface Props {
+  release: Release;
+  allDownloadsUrl: string;
+}
+
+const { release, allDownloadsUrl } = Astro.props;
+
+const PLATFORMS: { id: Platform; name: string }[] = [
+  { id: "macos", name: "macOS" },
+  { id: "windows", name: "Windows" },
+  { id: "linux", name: "Linux" },
+];
+---
+
+<div id="download" data-os="macos" class="mt-10 flex scroll-mt-24 flex-col items-center">
+  {PLATFORMS.map(({ id, name }) => (
+    <a
+      href={release.primary[id]}
+      data-for={id}
+      class="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-rose-600 px-6 text-base font-semibold text-white hover:bg-rose-700 motion-safe:transition-colors sm:w-auto"
+    >
+      <PlatformIcon platform={id} class="size-[18px]" />
+      Download for {name}
+    </a>
+  ))}
+  <p data-for="mobile" class="text-base font-medium text-mauve-950">
+    Available for macOS, Windows and Linux
+  </p>
+
+  <div class="relative mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm">
+    {PLATFORMS.map(({ id, name }) => (
+      <span data-other={id} class="contents">
+        <a href={release.primary[id]} class="link">
+          {name}
+        </a>
+        <span aria-hidden="true">·</span>
+      </span>
+    ))}
+    {release.installers.length > 0 ? (
+      <details class="group">
+        <summary class="link cursor-pointer list-none [&::-webkit-details-marker]:hidden">All downloads</summary>
+        <ul class="absolute top-full left-1/2 z-10 mt-3 w-[min(320px,calc(100vw-32px))] -translate-x-1/2 rounded-xl border border-mauve-200 bg-white p-2 text-left shadow-lg shadow-mauve-950/5">
+          {release.installers.map(({ platform, label, url }) => (
+            <li>
+              <a
+                href={url}
+                class="flex items-center gap-3 rounded-lg px-3 py-2 underline decoration-mauve-300 decoration-1 underline-offset-4 hover:bg-mauve-100 hover:text-mauve-950"
+              >
+                <PlatformIcon platform={platform} class="size-4 shrink-0" />
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    ) : (
+      <a href={allDownloadsUrl} class="link">
+        All downloads
+      </a>
+    )}
+    {release.version && (
+      <>
+        <span aria-hidden="true">·</span>
+        <span class="text-mauve-500">{release.version}</span>
+      </>
+    )}
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const platform = navigator.userAgentData?.platform || navigator.userAgent;
+    // iPadOS reports itself as a Mac, so a touch screen is the only tell.
+    const isTouchMac = /Mac/i.test(platform) && navigator.maxTouchPoints > 1;
+    let os = "macos";
+    if (isTouchMac || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) os = "mobile";
+    else if (/Win/i.test(platform)) os = "windows";
+    else if (/Linux|X11/i.test(platform)) os = "linux";
+    document.getElementById("download").dataset.os = os;
+  })();
+</script>
+
+<style>
+  [data-for] {
+    display: none;
+  }
+
+  [data-os="macos"] [data-for="macos"],
+  [data-os="windows"] [data-for="windows"],
+  [data-os="linux"] [data-for="linux"] {
+    display: inline-flex;
+  }
+
+  [data-os="mobile"] [data-for="mobile"] {
+    display: block;
+  }
+
+  [data-os="macos"] [data-other="macos"],
+  [data-os="windows"] [data-other="windows"],
+  [data-os="linux"] [data-other="linux"],
+  [data-os="mobile"] [data-other] {
+    display: none;
+  }
+</style>

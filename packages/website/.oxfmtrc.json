@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 120,
+  "trailingComma": "es5",
+  "astro": true,
+  "sortTailwindcss": {},
+  "sortPackageJson": false,
+  "sortImports": { "newlinesBetween": false },
+  "jsdoc": { "commentLineStrategy": "multiline", "preferCodeFences": true, "descriptionWithDot": true },
+  "ignorePatterns": ["dist", ".astro"]
+}

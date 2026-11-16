@@ -1,0 +1,40 @@
+---
+// Falls back to an empty window frame when src/assets/screenshot.* is missing.
+const screenshots = import.meta.glob<{ default: ImageMetadata }>("../assets/screenshot.{png,jpg,jpeg,webp,avif}", {
+  eager: true,
+});
+const screenshot = Object.values(screenshots)[0]?.default;
+---
+
+<div class="app-screenshot mx-auto w-[min(1100px,calc(100%-32px))]" aria-hidden={screenshot ? undefined : "true"}>
+  <div class="overflow-hidden rounded-t-[14px] border border-b-0 border-mauve-200 bg-white">
+    {screenshot ? (
+      <img
+        src={screenshot.src}
+        width={screenshot.width}
+        height={screenshot.height}
+        alt="The Skakia app analysing an Italian Game position with Stockfish"
+        class="block h-auto w-full"
+        decoding="async"
+      />
+    ) : (
+      <>
+        <div class="flex h-10 items-center gap-2 border-b border-mauve-200 px-4">
+          <span class="size-3 rounded-full bg-mauve-200" />
+          <span class="size-3 rounded-full bg-mauve-200" />
+          <span class="size-3 rounded-full bg-mauve-200" />
+        </div>
+        <div class="aspect-[16/10]" />
+      </>
+    )}
+  </div>
+</div>
+
+<style>
+  .app-screenshot {
+    max-height: min(640px, 70vw);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
+    mask-image: linear-gradient(to bottom, #000 45%, transparent);
+  }
+</style>

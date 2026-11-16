@@ -1,0 +1,22 @@
+---
+import { siApple, siLinux } from "simple-icons";
+import type { Platform } from "../lib/release";
+
+interface Props {
+  platform: Platform;
+  class?: string;
+}
+
+const { platform, class: className } = Astro.props;
+
+const PATHS: Record<Platform, string> = {
+  macos: siApple.path,
+  // simple-icons dropped the Windows mark, so this is the plain four-pane logo.
+  windows: "M0 0h11.4v11.4H0zM12.6 0H24v11.4H12.6zM0 12.6h11.4V24H0zM12.6 12.6H24V24H12.6z",
+  linux: siLinux.path,
+};
+---
+
+<svg class={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <path d={PATHS[platform]}></path>
+</svg>
