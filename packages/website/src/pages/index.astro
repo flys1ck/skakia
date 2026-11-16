@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ArrowUpRight } from "@lucide/astro";
 import AppScreenshot from "../components/AppScreenshot.astro";
 import Download from "../components/Download.astro";
 import { fetchLatestRelease, RELEASES_URL, REPOSITORY_URL } from "../lib/release";
@@ -42,8 +43,9 @@ const socialImageUrl = new URL("/logo.png", Astro.site);
           <span class="text-[17px] font-semibold tracking-tight">Skakia</span>
         </a>
         <nav aria-label="Main" class="flex items-center gap-6 text-sm font-medium">
-          <a href={REPOSITORY_URL} class="link">
+          <a href={REPOSITORY_URL} class="link inline-flex items-center gap-1">
             GitHub
+            <ArrowUpRight class="size-4" aria-hidden="true" />
           </a>
           <a href="#download" class="link">
             Download
@@ -69,8 +71,9 @@ const socialImageUrl = new URL("/logo.png", Astro.site);
       <footer class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-2 gap-y-1 px-4 py-8 text-sm sm:px-6">
         <span>© {new Date().getFullYear()} Skakia</span>
         <span aria-hidden="true">·</span>
-        <a href={REPOSITORY_URL} class="link">
+        <a href={REPOSITORY_URL} class="link inline-flex items-center gap-0.5">
           GitHub
+          <ArrowUpRight class="size-3.5" aria-hidden="true" />
         </a>
         {release.version && (
           <>
