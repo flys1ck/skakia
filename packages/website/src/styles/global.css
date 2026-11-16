@@ -33,6 +33,7 @@
 
 @utility link {
   text-decoration-line: underline;
+  text-decoration-style: dotted;
   text-decoration-color: var(--color-mauve-300);
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
