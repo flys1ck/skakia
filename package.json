@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@flys1ck/lichess-client": "workspace:*",
+    "@fontsource-variable/crimson-pro": "^5.3.0",
     "@lichess-org/chessground": "^10.5.0",
     "@lucide/vue": "^1.57.0",
     "@tanstack/vue-query": "^5.104.4",
