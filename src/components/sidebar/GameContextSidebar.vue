@@ -18,7 +18,7 @@
       </Suspense>
       <!-- Move history -->
       <template v-if="game.tree.root.value">
-        <div class="grow overflow-y-auto scroll-smooth">
+        <div ref="moveListRef" class="grow overflow-y-auto scroll-smooth">
           <div class="grid grid-cols-16 items-stretch">
             <GameTreeItem
               :node="game.tree.root.value"
@@ -46,7 +46,7 @@
                   size="icon-sm"
                   :disabled="game.tree.root.value?.id === game.tree.activeNode.value?.id"
                   aria-label="Skip to initial position"
-                  @click="toFirstMove"
+                  @click="game.toFirstMove()"
                 >
                   <ChevronsLeft />
                 </Button>
@@ -63,7 +63,7 @@
                   size="icon-sm"
                   :disabled="!game.tree.activeNode.value || !game.tree.activeNode.value.previousPosition"
                   aria-label="Previous move"
-                  @click="toPreviousMove"
+                  @click="game.toPreviousMove()"
                 >
                   <ChevronLeft />
                 </Button>
@@ -80,7 +80,7 @@
                   size="icon-sm"
                   :disabled="!game.tree.activeNode.value || !game.tree.activeNode.value.nextPosition"
                   aria-label="Next move"
-                  @click="toNextMove"
+                  @click="game.toNextMove()"
                 >
                   <ChevronRight />
                 </Button>
@@ -97,7 +97,7 @@
                   size="icon-sm"
                   :disabled="!game.tree.activeNode.value || !game.tree.activeNode.value.nextPosition"
                   aria-label="Skip to last move"
-                  @click="toLastMove"
+                  @click="game.toLastMove()"
                 >
                   <ChevronsRight />
                 </Button>
@@ -150,7 +150,7 @@ import {
   FlipVertical2,
   Plus,
 } from "@lucide/vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -163,11 +163,17 @@ const props = defineProps<{
 
 const TABS = ["Game", "Positions"];
 const selectedTab = ref("Game");
+const moveListRef = ref<HTMLElement>();
 
 function scrollToActiveMove() {
   const activeNodeId = props.game.tree.activeNode.value?.id;
-  document.querySelector(`[data-node-id="${activeNodeId}"]`)?.scrollIntoView({ block: "center" });
+  const activeMove = moveListRef.value?.querySelector(`[data-node-id="${activeNodeId}"]`);
+  // the starting position has no entry in the list
+  if (activeMove) activeMove.scrollIntoView({ block: "center" });
+  else moveListRef.value?.scrollTo({ top: 0 });
 }
+
+watch([() => props.game.tree.activeNode.value?.id, selectedTab], scrollToActiveMove, { flush: "post" });
 
 function setBestMoveArrows(bestMoves: { score: string; from: Key; to: Key }[]) {
   const shapes: DrawShape[] = bestMoves.map((bestMove, i) => ({
@@ -180,29 +186,5 @@ function setBestMoveArrows(bestMoves: { score: string; from: Key; to: Key }[]) {
   }));
   // TODO: shapes are overriden by hover
   props.game.setAutoShapes(shapes);
-}
-
-function toPreviousMove() {
-  props.game.toPreviousMove((node) => {
-    document.querySelector(`[data-node-id="${node.id}"]`)?.scrollIntoView({ block: "center" });
-  });
-}
-
-function toNextMove() {
-  props.game.toNextMove((node) => {
-    document.querySelector(`[data-node-id="${node.id}"]`)?.scrollIntoView({ block: "center" });
-  });
-}
-
-function toFirstMove() {
-  props.game.toFirstMove(() => {
-    document.querySelector(`[data-node-id]`)?.scrollIntoView({ block: "center" });
-  });
-}
-
-function toLastMove() {
-  props.game.toLastMove((node) => {
-    document.querySelector(`[data-node-id="${node.id}"]`)?.scrollIntoView({ block: "center" });
-  });
 }
 </script>

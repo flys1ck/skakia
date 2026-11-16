@@ -7,9 +7,8 @@
     :class="node.id === activeNodeId ? 'border-primary/60 bg-primary/10' : 'hover:bg-muted border-transparent'"
     @click="$emit('nodeselect', node)"
   >
-    <span v-if="node.previousPosition?.variations.length || node.ply % 2 === 1">{{ moveNumber }}. </span>
-    <span v-if="node.previousPosition?.variations.length && node.ply % 2 === 0">...</span>
-    <span>{{ node.move.san }}</span>
+    <span v-if="moveNumberLabel">{{ moveNumberLabel }}</span>
+    <span>{{ node.move.san }}{{ formatAnnotations(node.move.annotations) }}</span>
   </button>
   <p v-if="node.comment" class="inline" v-html="node.comment" />
   <GameTreeVariationItem
@@ -53,6 +52,7 @@
 
 <script setup lang="ts">
 import { PositionNode } from "@composables/useGameTree";
+import { formatAnnotations } from "@utilities/move";
 import { computed } from "vue";
 
 const props = withDefaults(
@@ -68,7 +68,12 @@ defineEmits<{
   nodeselect: [node: PositionNode];
 }>();
 
-const moveNumber = computed(() => {
-  return Math.ceil(props.node.ply / 2);
+const moveNumberLabel = computed(() => {
+  const moveNumber = Math.ceil(props.node.ply / 2);
+  if (props.node.ply % 2 === 1) return `${moveNumber}.`;
+
+  const previous = props.node.previousPosition;
+  const resumesAfterBreak = previous?.variations.length || previous?.comment || props.node.startingComment;
+  return resumesAfterBreak ? `${moveNumber}...` : "";
 });
 </script>

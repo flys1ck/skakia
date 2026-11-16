@@ -11,7 +11,7 @@
         :class="node.id === activeNodeId ? 'bg-primary/30' : 'hover:bg-muted'"
         @click="$emit('nodeselect', node)"
       >
-        {{ node.move.san }}<span v-if="resolvedAnnotation">{{ resolvedAnnotation }}</span>
+        {{ node.move.san }}{{ formatAnnotations(node.move.annotations) }}
       </button>
     </template>
     <!-- black's move that starts a row: first move of the game, or after a comment or variation -->
@@ -33,7 +33,7 @@
         :class="node.id === activeNodeId ? 'bg-primary/30' : 'hover:bg-muted'"
         @click="$emit('nodeselect', node)"
       >
-        {{ node.move.san }}<span v-if="resolvedAnnotation">{{ resolvedAnnotation }}</span>
+        {{ node.move.san }}{{ formatAnnotations(node.move.annotations) }}
       </button>
     </template>
     <!-- black's move -->
@@ -44,7 +44,7 @@
         :class="node.id === activeNodeId ? 'bg-primary/30' : 'hover:bg-muted'"
         @click="$emit('nodeselect', node)"
       >
-        {{ node.move.san }}<span v-if="resolvedAnnotation">{{ resolvedAnnotation }}</span>
+        {{ node.move.san }}{{ formatAnnotations(node.move.annotations) }}
       </button>
     </template>
   </template>
@@ -89,6 +89,7 @@
 <script setup lang="ts">
 import GameTreeVariationItem from "@components/sidebar/GameTreeVariationItem.vue";
 import { PositionNode } from "@composables/useGameTree";
+import { formatAnnotations } from "@utilities/move";
 import { computed } from "vue";
 
 const props = defineProps<{
@@ -102,37 +103,5 @@ defineEmits<{
 
 const moveNumber = computed(() => {
   return Math.ceil(props.node.ply / 2);
-});
-
-const nags: Record<number, string> = {
-  1: "!",
-  2: "?",
-  3: "‼",
-  4: "⁇",
-  5: "⁉",
-  6: "⁈",
-  7: "□",
-  10: "=",
-  13: "∞",
-  14: "⩲",
-  15: "⩱",
-  16: "±",
-  17: "∓",
-  18: "+-",
-  19: "-+",
-  22: "⨀",
-  32: "⟳",
-  36: "→",
-  40: "↑",
-  132: "⇆",
-  220: "D",
-};
-
-const resolvedAnnotation = computed(() => {
-  if (!props.node.move?.annotations?.length) return "";
-
-  return props.node.move.annotations.reduce((acc, nag) => {
-    return `${acc}${nags[nag]}`;
-  }, "");
 });
 </script>
