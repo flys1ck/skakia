@@ -1,6 +1,6 @@
 ---
 import { ChevronDown, Download } from "@lucide/astro";
-import type { Platform, Release } from "../lib/release";
+import { REPOSITORY_URL, type Platform, type Release } from "../lib/release";
 import PlatformIcon from "./PlatformIcon.astro";
 
 interface Props {
@@ -33,14 +33,13 @@ const PLATFORMS: { id: Platform; name: string }[] = [
   </p>
 
   <div class="relative mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm">
-    {PLATFORMS.map(({ id, name }) => (
-      <span data-other={id} class="contents">
-        <a href={release.primary[id]} class="link">
-          {name}
-        </a>
-        <span aria-hidden="true">·</span>
-      </span>
-    ))}
+    <span>
+      Free and{" "}
+      <a href={REPOSITORY_URL} class="link">
+        open source
+      </a>
+    </span>
+    <span aria-hidden="true">·</span>
     {release.installers.length > 0 ? (
       <details class="group">
         <summary class="link inline-flex cursor-pointer list-none items-center gap-1 [&::-webkit-details-marker]:hidden">
@@ -102,12 +101,5 @@ const PLATFORMS: { id: Platform; name: string }[] = [
 
   [data-os="mobile"] [data-for="mobile"] {
     display: block;
-  }
-
-  [data-os="macos"] [data-other="macos"],
-  [data-os="windows"] [data-other="windows"],
-  [data-os="linux"] [data-other="linux"],
-  [data-os="mobile"] [data-other] {
-    display: none;
   }
 </style>

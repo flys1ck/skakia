@@ -9,7 +9,7 @@ const release = await fetchLatestRelease();
 
 const title = "Skakia: Chess opening preparation for desktop";
 const description =
-  "Skakia is a desktop app for studying chess openings. Connect your Lichess and Chess.com games, check your preparation and analyse with Stockfish on macOS, Windows and Linux.";
+  "Skakia is a free and open source desktop app for studying chess openings. Connect your Lichess and Chess.com games, check your preparation and analyse with Stockfish on macOS, Windows and Linux.";
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const socialImageUrl = new URL("/logo.png", Astro.site);
 ---
@@ -37,20 +37,11 @@ const socialImageUrl = new URL("/logo.png", Astro.site);
     <div class="checkerboard pointer-events-none absolute inset-x-0 top-0 h-svh min-h-[640px]" aria-hidden="true"></div>
 
     <div class="relative">
-      <header class="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-4 sm:px-6">
+      <header class="mx-auto flex h-16 max-w-[1200px] items-center px-4 sm:px-6">
         <a href="/" class="flex items-center gap-2.5 rounded-md text-mauve-950">
           <img src="/logo.svg" width="28" height="28" alt="Skakia logo: a chess knight" class="size-7" />
           <span class="font-serif text-[28px] leading-7 font-normal">Skakia</span>
         </a>
-        <nav aria-label="Main" class="flex items-center gap-6 text-sm font-medium">
-          <a href={REPOSITORY_URL} class="link inline-flex items-center gap-1">
-            GitHub
-            <ArrowUpRight class="size-4" aria-hidden="true" />
-          </a>
-          <a href="#download" class="link">
-            Download
-          </a>
-        </nav>
       </header>
 
       <main>
@@ -75,12 +66,6 @@ const socialImageUrl = new URL("/logo.png", Astro.site);
           GitHub
           <ArrowUpRight class="size-3.5" aria-hidden="true" />
         </a>
-        {release.version && (
-          <>
-            <span aria-hidden="true">·</span>
-            <span>{release.version}</span>
-          </>
-        )}
       </footer>
     </div>
   </body>
