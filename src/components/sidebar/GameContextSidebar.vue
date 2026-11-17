@@ -21,7 +21,9 @@
         <div ref="moveListRef" class="grow overflow-y-auto scroll-smooth">
           <div class="grid grid-cols-16 items-stretch">
             <GameTreeItem
-              :node="game.tree.root.value"
+              v-for="node in game.tree.mainline.value"
+              :key="node.id"
+              :node="node"
               :active-node-id="game.tree.activeNode.value?.id"
               @nodeselect="game.setActivePosition"
             />

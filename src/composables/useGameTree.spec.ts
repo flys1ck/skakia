@@ -74,6 +74,17 @@ describe("useGameTree", () => {
     expect(tree.root.value!.variations).toHaveLength(0);
   });
 
+  it("lists the main line from the starting position, without variations", () => {
+    const tree = useGameTree();
+    tree.fromPgn("1. e4 e5 (1... c5 2. Nf3) 2. Nf3 *");
+
+    expect(tree.mainline.value.map((node) => node.move?.san)).toEqual([undefined, "e4", "e5", "Nf3"]);
+
+    tree.setActiveNode(tree.mainline.value[3]);
+    tree.addNode(tree.mainline.value[3].fen, { move: { ...tree.mainline.value[2].move!, san: "Nc6" } });
+    expect(tree.mainline.value.map((node) => node.move?.san)).toEqual([undefined, "e4", "e5", "Nf3", "Nc6"]);
+  });
+
   it("records the moved piece and treats mate as check", () => {
     const tree = useGameTree();
     tree.fromPgn("1. f3 e5 2. g4 Qh4# *");

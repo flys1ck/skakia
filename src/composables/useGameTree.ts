@@ -139,6 +139,12 @@ export function useGameTree() {
     if (root.value) setActiveNode(root.value);
   }
 
+  const mainline = computed(() => {
+    const nodes: PositionNode[] = [];
+    for (let node = root.value; node; node = node.nextPosition) nodes.push(node);
+    return nodes;
+  });
+
   const pgn = computed(() => {
     if (!root.value || !root.value.nextPosition) return "";
 
@@ -165,6 +171,7 @@ export function useGameTree() {
   return {
     root,
     activeNode,
+    mainline,
     pgn,
     setActiveNode,
     addNode,

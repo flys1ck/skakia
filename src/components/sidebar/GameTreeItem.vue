@@ -78,12 +78,6 @@
       </div>
     </div>
   </template>
-  <GameTreeItem
-    v-if="node.nextPosition"
-    :node="node.nextPosition"
-    :active-node-id="activeNodeId"
-    @nodeselect="(node) => $emit('nodeselect', node)"
-  />
 </template>
 
 <script setup lang="ts">
