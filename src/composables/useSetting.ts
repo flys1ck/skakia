@@ -16,11 +16,6 @@ export async function useSetting(key: string, initialValue: string) {
     await execute(query);
   };
 
-  // const removeItem = async (key: string) => {
-  //   const query = db.deleteFrom("settings").where("key", "=", key).compile();
-  //   await execute(query);
-  // };
-
   const setting = ref<string>("");
   watch(setting, async () => setItem(key, setting.value));
   const settingValue = await getItem(key);

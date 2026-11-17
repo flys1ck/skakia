@@ -3,10 +3,6 @@ import { Chess } from "chessops/chess";
 import { chessgroundDests } from "chessops/compat";
 import { parseFen } from "chessops/fen";
 
-export function isEnPassant(source: Key, destination: Key, pieceOnDestination: Role | undefined) {
-  return source[0] !== destination[0] && pieceOnDestination === "pawn";
-}
-
 export function isPromotion(destination: Key, pieceOnDestination: Role | undefined) {
   return pieceOnDestination === "pawn" && (destination[1] === "1" || destination[1] === "8");
 }

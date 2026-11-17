@@ -85,7 +85,6 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![study_import::import_study])
-        .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())

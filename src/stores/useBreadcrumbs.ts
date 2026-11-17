@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, type Component } from "vue";
 import { RouteLocationRaw } from "vue-router";
-// import type { RouteNamedMap } from "vue-router/auto-routes";
 
 interface Breadcrumb {
   icon?: Component;

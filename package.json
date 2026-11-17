@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "vite dev",
     "dev:worktree": "bun run scripts/devWorktree.ts",
-    "devtools": "vue-devtools",
     "build": "vue-tsc --noEmit && vite build",
     "tauri": "tauri",
     "db:gen:types": "kysely-codegen --dialect sqlite --exclude-pattern __* --out-file src/database.d.ts",
@@ -62,7 +61,6 @@
     "@types/node": "^26.6.5",
     "@types/unzipper": "^0.10.11",
     "@vitejs/plugin-vue": "^6.0.10",
-    "@vue/devtools": "^8.2.1",
     "follow-redirects": "^1.16.1",
     "kysely-codegen": "^0.20.0",
     "oxfmt": "^0.73.0",
