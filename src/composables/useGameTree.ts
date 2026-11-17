@@ -1,7 +1,7 @@
 import { Key, Piece } from "@lichess-org/chessground/types";
 import { formatComment } from "@utilities/comment";
 import { toSAN } from "@utilities/move";
-import { NormalMove, Position, makeSquare } from "chessops";
+import { NormalMove, Position, makeSquare, opposite } from "chessops";
 import { makeFen, parseFen } from "chessops/fen";
 import { ChildNode, PgnNodeData, parsePgn, startingPosition } from "chessops/pgn";
 import { parseSan } from "chessops/san";
@@ -46,48 +46,33 @@ export function useGameTree() {
   const root = ref<PositionNode>();
   const activeNode = ref<PositionNode>();
 
-  /**
-   * Add a new node to the tree.
-   *
-   * @param fen FEN string of the position.
-   * @param options Options for the move.
-   * @param force Force move to be added, even if it already exists on current node.
-   * @returns Newly added node
-   */
-  function addNode(fen: string, options?: AddMoveOptions, force: boolean = false): PositionNode {
-    const nodeId = crypto.randomUUID();
+  // Adding a move that already continues the active node selects that node instead of duplicating it.
+  function addNode(fen: string, options?: AddMoveOptions): PositionNode {
+    const parent = activeNode.value;
+    if (parent) {
+      const existingNode = [parent.nextPosition, ...parent.variations].find(
+        (child) => child && child.move?.san === options?.move?.san
+      );
+      if (existingNode) {
+        setActiveNode(existingNode);
+        return existingNode;
+      }
+    }
+
     const newNode: PositionNode = {
-      id: nodeId,
+      id: crypto.randomUUID(),
       fen,
-      ply: activeNode.value ? activeNode.value.ply + 1 : startingPly(fen),
-      move: options && options.move,
-      previousPosition: activeNode.value,
-      comment: options && options.comment,
-      startingComment: options && options.startingComment,
+      ply: parent ? parent.ply + 1 : startingPly(fen),
+      move: options?.move,
+      previousPosition: parent,
+      comment: options?.comment,
+      startingComment: options?.startingComment,
       variations: [],
     };
 
     if (!root.value) root.value = newNode;
-    if (activeNode.value) {
-      // check if move node exists in tree
-      if (activeNode.value.nextPosition && activeNode.value.nextPosition.move?.san === newNode.move?.san && !force) {
-        setActiveNode(activeNode.value.nextPosition);
-        return newNode;
-      } else if (activeNode.value.variations.length) {
-        const variation = activeNode.value.variations.find((variation) => variation.move?.san === newNode.move?.san);
-        if (variation) {
-          setActiveNode(variation);
-          return newNode;
-        }
-      }
-
-      // add move node to tree
-      if (activeNode.value.nextPosition) {
-        activeNode.value.variations.push(newNode);
-      } else {
-        activeNode.value.nextPosition = newNode;
-      }
-    }
+    if (parent?.nextPosition) parent.variations.push(newNode);
+    else if (parent) parent.nextPosition = newNode;
 
     setActiveNode(newNode);
     return newNode;
@@ -108,49 +93,48 @@ export function useGameTree() {
     reset();
 
     const game = games[0];
-    // add starting position
     const pos = startingPosition(game.headers).unwrap();
-    addNode(makeFen(pos.toSetup()), { comment: formatComment(game.comments?.join("") ?? "") });
+    const rootNode = addNode(makeFen(pos.toSetup()), { comment: formatComment(game.comments?.join("") ?? "") });
 
-    const parseChild = (child: ChildNode<PgnNodeData>, position: Position, previousMove?: NormalMove) => {
+    const parseChild = (
+      parent: PositionNode,
+      child: ChildNode<PgnNodeData>,
+      position: Position,
+      previousMove?: NormalMove
+    ) => {
       const isNullMove = child.data.san === "--";
-      const move = parseSan(position, child.data.san) as NormalMove | undefined;
-      if ((!isNullMove && !move) || (isNullMove && !previousMove)) return; //illegal move
+      // a null move keeps showing the move before it
+      const move = isNullMove ? previousMove : (parseSan(position, child.data.san) as NormalMove | undefined);
+      if (!move) return;
+
       const color = position.turn;
-      if (!isNullMove) position.play(move!);
-      const fen = makeFen(position.toSetup());
-      const node = addNode(
-        fen,
-        {
-          move: {
-            source: isNullMove ? makeSquare(previousMove!.from) : makeSquare(move!.from),
-            destination: isNullMove ? makeSquare(previousMove!.to) : makeSquare(move!.to),
-            san: child.data.san,
-            isCapture: child.data.san.includes("x"),
-            isCheck: child.data.san.includes("+"),
-            piece: {
-              role: isNullMove ? pos.board.getRole(previousMove!.from)! : pos.board.getRole(move!.from)!,
-              color,
-              promoted: isNullMove ? !!previousMove!.promotion : !!move!.promotion,
-            },
-            annotations: child.data.nags,
-          },
-          comment: child.data.comments && formatComment(child.data.comments.join("")),
-          startingComment: child.data.startingComments && formatComment(child.data.startingComments.join("")),
+      const role = position.board.getRole(isNullMove ? move.to : move.from)!;
+      if (isNullMove) {
+        if (position.turn === "black") position.fullmoves += 1;
+        position.turn = opposite(position.turn);
+        position.epSquare = undefined;
+      } else {
+        position.play(move);
+      }
+
+      setActiveNode(parent);
+      const node = addNode(makeFen(position.toSetup()), {
+        move: {
+          source: makeSquare(move.from),
+          destination: makeSquare(move.to),
+          san: child.data.san,
+          isCapture: child.data.san.includes("x"),
+          isCheck: /[+#]/.test(child.data.san),
+          piece: { role, color, promoted: !!move.promotion },
+          annotations: child.data.nags,
         },
-        true
-      );
-
-      setActiveNode(node);
-      if (child.children.length === 0) return;
-
-      parseChild(child.children[0], position.clone(), move);
-      child.children.slice(1).forEach((child) => {
-        setActiveNode(node!);
-        parseChild(child, position.clone(), move);
+        comment: child.data.comments && formatComment(child.data.comments.join("")),
+        startingComment: child.data.startingComments && formatComment(child.data.startingComments.join("")),
       });
+
+      child.children.forEach((grandchild) => parseChild(node, grandchild, position.clone(), move));
     };
-    game.moves.children.forEach((child) => parseChild(child, pos.clone()));
+    game.moves.children.forEach((child) => parseChild(rootNode, child, pos.clone()));
 
     if (root.value) setActiveNode(root.value);
   }

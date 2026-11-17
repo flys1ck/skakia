@@ -62,40 +62,16 @@ const promotionBoardStyle = computed(() => {
   };
 });
 
-function toPreviousMove() {
-  props.game.toPreviousMove((node) => {
-    document.querySelector(`[data-node-id="${node.id}"]`)?.scrollIntoView({ block: "center" });
-  });
-}
-
-function toNextMove() {
-  props.game.toNextMove((node) => {
-    document.querySelector(`[data-node-id="${node.id}"]`)?.scrollIntoView({ block: "center" });
-  });
-}
-
-function toFirstMove() {
-  props.game.toFirstMove(() => {
-    document.querySelector(`[data-node-id]`)?.scrollIntoView({ block: "center" });
-  });
-}
-
-function toLastMove() {
-  props.game.toLastMove((node) => {
-    document.querySelector(`[data-node-id="${node.id}"]`)?.scrollIntoView({ block: "center" });
-  });
-}
-
 const shortcuts: Record<string, (e: KeyboardEvent) => void> = {
-  ArrowLeft: toPreviousMove,
-  ArrowRight: toNextMove,
+  ArrowLeft: () => props.game.toPreviousMove(),
+  ArrowRight: () => props.game.toNextMove(),
   ArrowUp: (e) => {
     e.preventDefault();
-    toFirstMove();
+    props.game.toFirstMove();
   },
   ArrowDown: (e) => {
     e.preventDefault();
-    toLastMove();
+    props.game.toLastMove();
   },
   f: props.game.toggleOrientation,
 };
@@ -107,11 +83,8 @@ onKeyStroke(Object.keys(shortcuts), (e) => {
 });
 useEventListener(chessboardRef, "wheel", (e: WheelEvent) => {
   const { deltaY } = e;
-  if (deltaY < 0) {
-    toPreviousMove();
-  } else {
-    toNextMove();
-  }
+  if (deltaY < 0) props.game.toPreviousMove();
+  else props.game.toNextMove();
 });
 
 onMounted(async () => {

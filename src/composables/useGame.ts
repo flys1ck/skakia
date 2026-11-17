@@ -77,15 +77,14 @@ export function useGame() {
     board?.move(source, destination);
   }
 
-  function toPreviousMove(cb?: (node: PositionNode) => void) {
+  function toPreviousMove() {
     const previousPosition = tree.activeNode.value?.previousPosition;
     if (!previousPosition) return;
 
     setActivePosition(previousPosition);
-    if (cb) cb(previousPosition);
   }
 
-  function toNextMove(cb?: (node: PositionNode) => void) {
+  function toNextMove() {
     const nextPosition = tree.activeNode.value?.nextPosition;
     if (!nextPosition) return;
     if (nextPosition.move?.san !== "--") {
@@ -100,18 +99,16 @@ export function useGame() {
     }
 
     setActivePosition(nextPosition);
-    if (cb) cb(nextPosition);
   }
 
-  function toFirstMove(cb?: (node: PositionNode) => void) {
+  function toFirstMove() {
     const root = tree.root.value;
     if (!root) return;
 
     setActivePosition(root);
-    if (cb) cb(root);
   }
 
-  function toLastMove(cb?: (node: PositionNode) => void) {
+  function toLastMove() {
     let node = tree.activeNode.value?.nextPosition;
     while (node?.nextPosition) {
       node = node.nextPosition;
@@ -119,7 +116,6 @@ export function useGame() {
     if (!node) return;
 
     setActivePosition(node);
-    if (cb) cb(node);
   }
 
   function processMove(source: Key, destination: Key, options?: { promotionPiece?: PromotionPiece }) {

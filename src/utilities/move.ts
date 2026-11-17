@@ -29,3 +29,31 @@ export function getPositionKey(fen: string) {
 
   return fields.slice(0, 4).join(" ");
 }
+
+const NAG_SYMBOLS: Record<number, string> = {
+  1: "!",
+  2: "?",
+  3: "‼",
+  4: "⁇",
+  5: "⁉",
+  6: "⁈",
+  7: "□",
+  10: "=",
+  13: "∞",
+  14: "⩲",
+  15: "⩱",
+  16: "±",
+  17: "∓",
+  18: "+-",
+  19: "-+",
+  22: "⨀",
+  32: "⟳",
+  36: "→",
+  40: "↑",
+  132: "⇆",
+  220: "D",
+};
+
+export function formatAnnotations(nags: number[] | undefined) {
+  return (nags ?? []).map((nag) => NAG_SYMBOLS[nag] ?? "").join("");
+}

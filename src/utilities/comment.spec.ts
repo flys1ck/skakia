@@ -7,6 +7,12 @@ describe("formatComment", () => {
     expect(formatComment("<script>alert('hello')</script>")).toBe("");
   });
 
+  it("should escape markup the tag stripping leaves behind", () => {
+    expect(formatComment("<img src=x onerror=alert(1)>")).toBe("&lt;img src=x onerror=alert(1)&gt;");
+    expect(formatComment("<div><img src=x onerror=alert(1)></div>")).not.toContain("<");
+    expect(formatComment("R&D says a < b")).toBe("R&amp;D says a &lt; b");
+  });
+
   it("should replace custom pgn comments", () => {
     expect(formatComment("[test]")).toBe("");
     expect(formatComment("[test] [test2]")).toBe("");
@@ -31,5 +37,10 @@ describe("formatComment", () => {
     expect(formatComment("0-0-0")).toBe("<b>0-0-0</b>");
     expect(formatComment("O-O")).toBe("<b>O-O</b>");
     expect(formatComment("O-O-O")).toBe("<b>O-O-O</b>");
+    expect(formatComment("(Nf3, e4!)")).toBe("(<b>Nf3</b>, <b>e4</b>!)");
+  });
+
+  it("should not highlight move-like text inside words", () => {
+    expect(formatComment("the alpha1 grade8 Catch22 plan")).toBe("the alpha1 grade8 Catch22 plan");
   });
 });
