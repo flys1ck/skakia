@@ -60,7 +60,7 @@ bun run submit:firefox --dry-run   # checks the credentials only
 bun run submit:firefox             # uploads and submits for review
 ```
 
-The Chrome Web Store API cannot create an item, so the first version is uploaded and submitted in the [Developer Dashboard](https://chrome.google.com/webstore/devconsole) with the listing from `store/chrome.md`. Later versions go through the API. It needs a Google Cloud service account that is added to the publisher in the dashboard, and these in `mise.local.toml`:
+The Chrome Web Store API cannot create an item or edit its listing, so both were done by hand in the [Developer Dashboard](https://chrome.google.com/webstore/devconsole). New versions go through the API. It needs a Google Cloud service account that is added to the publisher in the dashboard, and these in `mise.local.toml`:
 
 ```toml
 CHROME_EXTENSION_ID = "..."
