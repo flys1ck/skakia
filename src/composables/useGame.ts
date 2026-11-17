@@ -87,16 +87,7 @@ export function useGame() {
   function toNextMove() {
     const nextPosition = tree.activeNode.value?.nextPosition;
     if (!nextPosition) return;
-    if (nextPosition.move?.san !== "--") {
-      if (nextPosition.move?.isCapture) {
-        void playAudio("capture");
-      } else if (nextPosition.move?.isCheck) {
-        // TODO add proper sound
-        void playAudio("move");
-      } else {
-        void playAudio("move");
-      }
-    }
+    if (nextPosition.move && nextPosition.move.san !== "--") playMoveAudio(nextPosition.move);
 
     setActivePosition(nextPosition);
   }
@@ -116,6 +107,11 @@ export function useGame() {
     if (!node) return;
 
     setActivePosition(node);
+  }
+
+  function playMoveAudio(move: Pick<ChessMove, "isCapture" | "isCheck">) {
+    void playAudio(move.isCapture ? "capture" : "move");
+    if (move.isCheck) void playAudio("check");
   }
 
   function processMove(source: Key, destination: Key, options?: { promotionPiece?: PromotionPiece }) {
@@ -164,12 +160,7 @@ export function useGame() {
     if (isEnPassant) board?.setPiece((fixedDestination[0] + source[1]) as Key, undefined);
     if (isCheck) board?.setCheck();
 
-    // play move audio
-    if (isCapture) {
-      void playAudio("capture");
-    } else {
-      void playAudio("move");
-    }
+    playMoveAudio({ isCapture, isCheck });
 
     fen.value = makeFen(pos.toSetup());
     board?.setTurn(fen.value, pos.turn);
