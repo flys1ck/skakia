@@ -42,7 +42,38 @@ Build and sign the generated Xcode project. Distribution needs an Apple Develope
 
 ## Releasing
 
-The version comes from `package.json`. The Firefox add-on ID (`browser_specific_settings.gecko.id` in `wxt.config.ts`) cannot change once the first version is uploaded.
+The version comes from `package.json`. The Firefox add-on ID (`browser_specific_settings.gecko.id` in `wxt.config.ts`) cannot change once the first version is uploaded. addons.mozilla.org rejects a version number it has seen before, so bump it for every upload.
+
+Submitting to addons.mozilla.org needs API credentials from **Manage API Keys** in the Developer Hub. `bun` runs through [mise](https://mise.jdx.dev/), so put them in the gitignored `mise.local.toml` at the repository root:
+
+```toml
+[env]
+FIREFOX_JWT_ISSUER = "..."
+FIREFOX_JWT_SECRET = "..."
+```
+
+Then build the archives and submit them. `amo-metadata.json` holds the listing fields addons.mozilla.org requires (category, summary, license).
+
+```bash
+bun run zip:firefox
+bun run submit:firefox --dry-run   # checks the credentials only
+bun run submit:firefox             # uploads and submits for review
+```
+
+The Chrome Web Store API cannot create an item, so the first version is uploaded and submitted in the [Developer Dashboard](https://chrome.google.com/webstore/devconsole) with the listing from `store/chrome.md`. Later versions go through the API. It needs a Google Cloud service account that is added to the publisher in the dashboard, and these in `mise.local.toml`:
+
+```toml
+CHROME_EXTENSION_ID = "..."
+CHROME_PUBLISHER_ID = "..."
+CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL = "..."
+CHROME_SERVICE_ACCOUNT_PRIVATE_KEY = "..."
+```
+
+```bash
+bun run zip
+bun run submit:chrome --dry-run
+bun run submit:chrome
+```
 
 ## Project structure
 
