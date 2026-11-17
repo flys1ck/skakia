@@ -1,4 +1,3 @@
-import { ChessMove } from "@composables/useGameTree";
 import { Key, Role } from "@lichess-org/chessground/types";
 import { Chess } from "chessops/chess";
 import { chessgroundDests } from "chessops/compat";
@@ -10,10 +9,6 @@ export function isEnPassant(source: Key, destination: Key, pieceOnDestination: R
 
 export function isPromotion(destination: Key, pieceOnDestination: Role | undefined) {
   return pieceOnDestination === "pawn" && (destination[1] === "1" || destination[1] === "8");
-}
-
-export function toSAN(move: ChessMove) {
-  return move.san;
 }
 
 export function getPossibleMoves(fen: string) {

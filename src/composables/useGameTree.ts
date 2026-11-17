@@ -1,6 +1,5 @@
 import { Key, Piece } from "@lichess-org/chessground/types";
 import { formatComment } from "@utilities/comment";
-import { toSAN } from "@utilities/move";
 import { NormalMove, Position, makeSquare, opposite } from "chessops";
 import { makeFen, parseFen } from "chessops/fen";
 import { ChildNode, PgnNodeData, parsePgn, startingPosition } from "chessops/pgn";
@@ -145,34 +144,10 @@ export function useGameTree() {
     return nodes;
   });
 
-  const pgn = computed(() => {
-    if (!root.value || !root.value.nextPosition) return "";
-
-    let pgn = "";
-    let node: PositionNode | undefined = root.value.nextPosition;
-    while (node && node.move) {
-      const san = toSAN(node.move);
-      // move number
-      const moveNumber = Math.ceil(node.ply / 2);
-      if (node.move.piece.color === "white") pgn += `${moveNumber}. `;
-      else if (node === root.value.nextPosition) pgn += `${moveNumber}... `;
-      // SAN notation
-      pgn += `${san} `;
-      // TODO: checkmate
-      // TODO: annotations
-      // TODO: comments
-      pgn += node.comment ? `{${node.comment}} ` : "";
-      node = node.nextPosition;
-    }
-
-    return pgn;
-  });
-
   return {
     root,
     activeNode,
     mainline,
-    pgn,
     setActiveNode,
     addNode,
     reset,
