@@ -4,7 +4,7 @@ import { DrawShape } from "@lichess-org/chessground/draw";
 import { Color, Key, Piece } from "@lichess-org/chessground/types";
 import { key2pos } from "@lichess-org/chessground/util";
 import { playAudio } from "@utilities/audio";
-import { getPositionKey, getPossibleMoves, isPromotion } from "@utilities/move";
+import { getPositionKey, isPromotion } from "@utilities/move";
 import { Chess } from "chessops/chess";
 import { makeFen, parseFen } from "chessops/fen";
 import { makeSanAndPlay } from "chessops/san";
@@ -43,7 +43,6 @@ export function useGame() {
       fen: fen.value,
       turnColor: pos.turn,
       lastMove: activeMove && [activeMove.source, activeMove.destination],
-      possibleMoves: getPossibleMoves(fen.value),
       isCheck: pos.isCheck(),
     };
     board = useChessground(element, {

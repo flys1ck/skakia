@@ -1,13 +1,12 @@
 import { Chessground } from "@lichess-org/chessground";
 import { DrawShape } from "@lichess-org/chessground/draw";
-import { Color, Dests, Key, Piece } from "@lichess-org/chessground/types";
+import { Color, Key, Piece } from "@lichess-org/chessground/types";
 import { getPossibleMoves } from "@utilities/move";
 
 export interface Position {
   fen: string;
   turnColor: Color;
   lastMove?: Key[];
-  possibleMoves?: Dests;
   isCheck?: boolean;
 }
 
@@ -98,10 +97,6 @@ export function useChessground(element: HTMLElement, options: UseChessgroundOpti
     return chessground.state.orientation;
   }
 
-  function appendChildToContainer(element: HTMLElement) {
-    chessground.state.dom.elements.board.appendChild(element);
-  }
-
   function toggleOrientation() {
     chessground.toggleOrientation();
   }
@@ -114,7 +109,6 @@ export function useChessground(element: HTMLElement, options: UseChessgroundOpti
     getPiece,
     getOrientation,
     toggleOrientation,
-    appendChildToContainer,
     setTurn,
     setPiece,
     setCheck,

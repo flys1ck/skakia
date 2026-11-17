@@ -4,7 +4,7 @@ import { ChildNode, Game, Node, PgnNodeData, makePgn, startingPosition } from "c
 import { parseSan } from "chessops/san";
 import { getPositionKey } from "./move";
 
-export type Orientation = "white" | "black";
+type Orientation = "white" | "black";
 
 export interface ImportSettings {
   chapterHeader: string;
@@ -18,7 +18,7 @@ export interface HeaderSummary {
   count: number;
 }
 
-export interface PlannedPosition {
+interface PlannedPosition {
   positionKey: string;
   ply: number;
   halfmoveClock: number;
@@ -37,7 +37,7 @@ export interface PlannedLine {
   warnings: string[];
 }
 
-export interface PlannedChapter {
+interface PlannedChapter {
   name: string;
   lines: PlannedLine[];
 }
