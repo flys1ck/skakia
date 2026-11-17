@@ -117,3 +117,9 @@ VS Code with the following extensions:
 - [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) — Vue 3 language support
 - [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) — Tauri tooling
 - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) — Rust language support
+
+## License
+
+Skakia is free software, licensed under the [GNU General Public License v3.0 or later](LICENSE).
+
+Release builds bundle the [Stockfish](https://stockfishchess.org/) engine as a separate executable. Stockfish is licensed under the GPL v3; its source code is at [official-stockfish/Stockfish](https://github.com/official-stockfish/Stockfish).
