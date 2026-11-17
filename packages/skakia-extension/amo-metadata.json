@@ -1,0 +1,5 @@
+{
+  "categories": { "firefox": ["games-entertainment"] },
+  "summary": { "en-US": "Open finished Lichess and Chess.com games in the Skakia desktop app" },
+  "version": { "license": "all-rights-reserved" }
+}

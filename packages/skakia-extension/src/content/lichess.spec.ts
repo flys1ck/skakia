@@ -17,16 +17,27 @@ describe("extractLichessGameId", () => {
     ["/9SZSSje9abcd", "9SZSSje9"],
     ["/9SZSSje9/analysis", "9SZSSje9"],
     ["/analysisAbCd", "analysis"],
+    ["/game/9SZSSje9", "9SZSSje9"],
+    ["/game/9SZSSje9/", "9SZSSje9"],
+    ["/game/9SZSSje9/black", "9SZSSje9"],
+    ["/game/9SZSSje9abcd", "9SZSSje9"],
+    ["/game/9SZSSje9/white/analysis", "9SZSSje9"],
   ])("reads the game id from %s", (pathname, gameId) => {
     expect(extractLichessGameId(pathname, roundPage)).toBe(gameId);
   });
 
-  it.each(["/", "/tournament", "/analysis/standard", "/training/daily", "/tv/rapid", "/@/someuser"])(
-    "ignores %s",
-    (pathname) => {
-      expect(extractLichessGameId(pathname, roundPage)).toBeNull();
-    }
-  );
+  it.each([
+    "/",
+    "/tournament",
+    "/analysis/standard",
+    "/training/daily",
+    "/tv/rapid",
+    "/@/someuser",
+    "/game/export/9SZSSje9",
+    "/game/9SZSSje9/edit",
+  ])("ignores %s", (pathname) => {
+    expect(extractLichessGameId(pathname, roundPage)).toBeNull();
+  });
 
   it.each(["/analysis", "/analysis/"])("ignores the standalone analysis board at %s", (pathname) => {
     expect(extractLichessGameId(pathname, documentMatching("main.analyse"))).toBeNull();

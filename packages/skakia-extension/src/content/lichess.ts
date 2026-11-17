@@ -1,9 +1,10 @@
 /**
- * Matches `/gameId`, `/gameIdXXXX` (player seat), and optional `/white|black|/analysis` suffixes. `/analysis` itself is
+ * Matches `/game/gameId`, `/game/gameIdXXXX` (player seat), and optional `/white|black|/analysis` suffixes. Lichess
+ * moved games under `/game/` and redirects the old un-prefixed paths, which still match here. `/analysis` itself is
  * excluded: the standalone board is 8 characters long and renders the same `main.analyse` as a game.
  */
 const LICHESS_GAME_PATH =
-  /^\/(?!analysis(?:\/|$))([a-zA-Z0-9]{8})([a-zA-Z0-9]{4})?(?:\/(?:white|black))?(?:\/analysis)?\/?$/;
+  /^\/(?:game\/)?(?!analysis(?:\/|$))([a-zA-Z0-9]{8})([a-zA-Z0-9]{4})?(?:\/(?:white|black))?(?:\/analysis)?\/?$/;
 
 /**
  * Other 8-character routes (`/training`, `/practice`, `/streamer`, ...) match the path as well, so the page also has to
