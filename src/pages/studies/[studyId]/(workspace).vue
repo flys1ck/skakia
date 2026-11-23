@@ -26,10 +26,9 @@
 <script setup lang="ts">
 import StudyWorkspacePanel from "@components/studies/StudyWorkspacePanel.vue";
 import { PanelLeftOpen } from "@lucide/vue";
-import { computed, onBeforeUnmount, ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const route = useRoute("/studies/[studyId]/(workspace)");
@@ -37,12 +36,4 @@ const studyId = computed(() => Number(route.params.studyId));
 const chapterId = computed(() => ("chapterId" in route.params ? Number(route.params.chapterId) : undefined));
 const lineId = computed(() => ("lineId" in route.params ? Number(route.params.lineId) : undefined));
 const isPanelOpen = ref(true);
-
-// Three columns need the room, so the navigation shrinks to icons here. Setting `open` directly keeps the user's saved preference.
-const { open } = useSidebar();
-const wasOpen = open.value;
-open.value = false;
-onBeforeUnmount(() => {
-  if (!open.value) open.value = wasOpen;
-});
 </script>

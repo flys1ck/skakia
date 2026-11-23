@@ -1,12 +1,9 @@
 <template>
-  <SidebarProvider class="h-screen overflow-hidden">
+  <div class="flex h-screen overflow-hidden bg-linear-160/srgb from-rose-200 via-fuchsia-100 via-60% to-violet-50">
     <NavigationSidebar />
-    <SidebarInset class="min-w-0 overflow-y-auto">
-      <div
-        class="flex min-h-0 min-w-0 grow flex-col bg-[linear-gradient(to_right_in_oklab,var(--color-rose-100),var(--color-mauve-100)_240px)]"
-      >
-        <header class="flex h-12 shrink-0 items-center gap-3 pr-3 pl-4 transition-[width,height] ease-linear">
-          <SidebarTrigger class="mr-2 hover:bg-white/20 active:bg-white/30" />
+    <main class="flex min-w-0 grow flex-col overflow-y-auto">
+      <div class="flex min-h-0 min-w-0 grow flex-col">
+        <header class="flex h-12 shrink-0 items-center gap-3 pr-3 pl-4">
           <template v-if="studyOrigin.returnLink">
             <Button variant="outline" size="sm" class="shrink-0" as-child>
               <RouterLink :to="studyOrigin.returnLink.to">
@@ -41,9 +38,7 @@
           Suspense must stay inside RouterView: around it, Vue holds back RouterView updates while an async page is pending, and a page that fails to load blocks navigation.
           timeout="0" unmounts the previous page right away: kept alive, its route param watchers would fire with the next route's params.
         -->
-        <div
-          class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-tl-xl border-t border-l shadow-[inset_1px_1px_6px_-2px_rgb(77_2_24/0.12)]"
-        >
+        <div class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-tl-xl border-t border-l">
           <RouterView v-slot="{ Component: page }">
             <Suspense v-if="page" :timeout="0">
               <Component :is="page" />
@@ -51,9 +46,9 @@
           </RouterView>
         </div>
       </div>
-    </SidebarInset>
+    </main>
     <SettingsDialog />
-  </SidebarProvider>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -72,7 +67,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 const breadcrumbsStore = useBreadcrumbs();
 const studyOrigin = useStudyOrigin();
