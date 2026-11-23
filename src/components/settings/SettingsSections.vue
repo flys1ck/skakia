@@ -47,13 +47,20 @@
     <BaseSettingsSection heading="Browser Extension">
       <template #description> Open games in Skakia straight from Lichess and Chess.com. </template>
       <template #form>
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col gap-3">
           <p class="text-muted-foreground text-sm">
             Adds an Analyze in Skakia button to finished games in your browser.
           </p>
-          <Button variant="outline" class="shrink-0" @click="openUrl(EXTENSION_URL)">
-            Get the extension<ExternalLink data-icon="inline-end" />
-          </Button>
+          <div class="flex gap-2">
+            <Button
+              v-for="store in EXTENSION_STORES"
+              :key="store.browser"
+              variant="outline"
+              @click="openUrl(store.url)"
+            >
+              Get for {{ store.browser }}<ExternalLink data-icon="inline-end" />
+            </Button>
+          </div>
         </div>
       </template>
     </BaseSettingsSection>
@@ -103,7 +110,7 @@ import AccountStatusRow from "@components/settings/AccountStatusRow.vue";
 import StudyStorageChart from "@components/settings/StudyStorageChart.vue";
 import { ExternalLink } from "@lucide/vue";
 import { useChessDotCom } from "@stores/useChessDotCom";
-import { EXTENSION_URL } from "@stores/useExtensionPromo";
+import { EXTENSION_STORES } from "@stores/useExtensionPromo";
 import { useLichess } from "@stores/useLichess";
 import { useSettings } from "@stores/useSettings";
 import { openUrl } from "@tauri-apps/plugin-opener";
