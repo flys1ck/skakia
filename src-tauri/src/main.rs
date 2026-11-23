@@ -6,7 +6,7 @@
 mod database;
 mod study_import;
 
-use database::{compact_database_if_needed, CompactionOutcome, MIGRATIONS};
+use database::{compact_database_if_needed, enable_write_ahead_log, CompactionOutcome, MIGRATIONS};
 use diesel::{connection::SimpleConnection, Connection, SqliteConnection};
 use diesel_migrations::MigrationHarness;
 use study_import::DatabasePath;
@@ -65,6 +65,12 @@ fn main() {
             connection
                 .run_pending_migrations(MIGRATIONS)
                 .unwrap_or_else(|error| panic!("Migrations could not be run: {error}"));
+
+            match enable_write_ahead_log(&mut connection) {
+                Ok(mode) if mode.eq_ignore_ascii_case("wal") => {}
+                Ok(mode) => eprintln!("SQLite stayed in {mode} journal mode instead of WAL"),
+                Err(error) => eprintln!("Could not enable SQLite WAL mode: {error}"),
+            }
 
             match compact_database_if_needed(&mut connection) {
                 Ok(CompactionOutcome::Compacted { before, after }) => {

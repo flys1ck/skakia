@@ -14,6 +14,20 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 const MIN_RECLAIMABLE_BYTES: i128 = 16 * 1024 * 1024;
 const MIN_RECLAIMABLE_PERCENT: i128 = 20;
 
+#[derive(QueryableByName)]
+struct JournalMode {
+    #[diesel(sql_type = Text)]
+    journal_mode: String,
+}
+
+// WAL lets the UI keep reading while an import writes. The mode is stored in the database file,
+// so the SQL plugin's connections pick it up without being configured themselves.
+pub fn enable_write_ahead_log(connection: &mut SqliteConnection) -> Result<String, DieselError> {
+    sql_query("PRAGMA journal_mode = WAL")
+        .get_result::<JournalMode>(connection)
+        .map(|row| row.journal_mode)
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, QueryableByName)]
 pub struct DatabaseStats {
     #[diesel(sql_type = BigInt)]
@@ -337,6 +351,28 @@ mod tests {
                 DieselError::DatabaseError(_, _)
             ))
         ));
+    }
+
+    #[test]
+    fn write_ahead_log_persists_for_later_connections() {
+        let (directory, mut connection) = temporary_connection();
+
+        assert_eq!(
+            enable_write_ahead_log(&mut connection).expect("enable WAL"),
+            "wal"
+        );
+        drop(connection);
+
+        let database_path = directory.path().join("database.sqlite");
+        let mut later_connection =
+            SqliteConnection::establish(database_path.to_str().expect("UTF-8 database path"))
+                .expect("later SQLite connection");
+        assert_eq!(
+            database_stats(&mut later_connection)
+                .expect("database statistics")
+                .journal_mode,
+            "wal"
+        );
     }
 
     #[test]

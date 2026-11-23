@@ -84,14 +84,21 @@ pub async fn import_study(
     tauri::async_runtime::spawn_blocking(move || {
         let mut connection = open_connection(&database_path)?;
         let mut last_sent: Option<Instant> = None;
-        import_plan(&mut connection, &target, &plan, |progress| {
+        let study_id = import_plan(&mut connection, &target, &plan, |progress| {
             let is_last = progress.imported_lines == progress.total_lines;
             if is_last || last_sent.is_none_or(|sent| sent.elapsed() >= PROGRESS_INTERVAL) {
                 last_sent = Some(Instant::now());
                 let _ = on_progress.send(progress);
             }
         })
-        .map_err(|error| error.to_string())
+        .map_err(|error| error.to_string())?;
+
+        // The SQL plugin keeps its connections open, so the WAL file would otherwise stay as large
+        // as this import until the app quits
+        if let Err(error) = connection.batch_execute("PRAGMA wal_checkpoint(TRUNCATE)") {
+            eprintln!("Could not truncate the SQLite WAL after an import: {error}");
+        }
+        Ok(study_id)
     })
     .await
     .map_err(|error| error.to_string())?
@@ -104,8 +111,12 @@ fn open_connection(database_path: &Path) -> Result<SqliteConnection, String> {
         .ok_or_else(|| format!("Database path {database_path:?} is not valid UTF-8"))?;
     let mut connection =
         SqliteConnection::establish(database_url).map_err(|error| error.to_string())?;
+    // With the default 2 MB cache a large import spills pages into the WAL mid-transaction,
+    // which doubled its duration while the UI was reading
     connection
-        .batch_execute("PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 5000;")
+        .batch_execute(
+            "PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 5000; PRAGMA cache_size = -65536;",
+        )
         .map_err(|error| error.to_string())?;
     Ok(connection)
 }

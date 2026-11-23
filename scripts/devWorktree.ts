@@ -116,7 +116,8 @@ function seedDatabase(identifier: string): void {
 
   mkdirSync(targetDirectory, { recursive: true });
   // VACUUM INTO takes a consistent snapshot even while the main app has the database open in WAL mode.
-  const database = new Database(source, { readonly: true });
+  // Not read-only: with the main app closed, a WAL database can't be opened without creating its -shm file.
+  const database = new Database(source);
   database.run("VACUUM INTO ?", [target]);
   database.close();
   console.log(`Copied main database to ${target}`);
