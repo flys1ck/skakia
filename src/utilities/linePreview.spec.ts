@@ -1,6 +1,6 @@
 import { INITIAL_FEN } from "chessops/fen";
 import { describe, expect, it } from "vitest";
-import { formatSanMoves, getLinePreviews, getStartPly } from "./linePreview";
+import { countNamedPlies, formatSanMoves, getLinePreviews, getStartPly } from "./linePreview";
 
 describe("formatSanMoves", () => {
   it("numbers moves from the initial position", () => {
@@ -21,6 +21,41 @@ describe("getStartPly", () => {
     expect(getStartPly(INITIAL_FEN)).toBe(0);
     expect(getStartPly("1k2r3/pp3p2/2p2n1b/5Q2/P5nP/2NR4/1P2PPBq/1R3K2 b - - 0 24")).toBe(47);
     expect(getStartPly("r2q1rk1/pp1nbppp/2p1pn2/5b2/2QP4/5NP1/PP2PPBP/RNBR2K1 w - - 0 10")).toBe(18);
+  });
+});
+
+describe("countNamedPlies", () => {
+  const advance = "e4 c6 d4 d5 e5 c5 dxc5 Nc6 Nf3 Bg4 Bb5 e6 Be3 Ne7 c3".split(" ");
+
+  it("counts up to the last move the name mentions", () => {
+    expect(countNamedPlies("4.dxc5 Nc6 5.Nf3 Bg4 6.Bb5 e6 with 7.Be3", advance)).toBe(13);
+    expect(countNamedPlies("4.dxc5 Nc6 & 5.Nf3 Bg4", advance)).toBe(10);
+  });
+
+  it("reads black moves, spaced numbers and annotations", () => {
+    expect(
+      countNamedPlies("Chigorin: 2... Nf6 3. Bf4 Nc6 with 4... Bg4 #1", "d4 d5 Nf3 Nf6 Bf4 Nc6 e3 Bg4 h3".split(" "))
+    ).toBe(8);
+    expect(
+      countNamedPlies(
+        "6.c3 (6...a6!? alternative) - 7.Be3",
+        "e4 c6 d4 d5 e5 c5 dxc5 Nc6 Nf3 Bg4 c3 a6 Be3 Nxe5".split(" ")
+      )
+    ).toBe(13);
+  });
+
+  it("skips moves the line does not play", () => {
+    expect(countNamedPlies("Early Sidelines 4.Nc3/4.Be3/4.f4", "e4 c6 d4 d5 e5 c5 Nc3 Nc6".split(" "))).toBe(7);
+    expect(countNamedPlies("4.c3 Nc6 5.Be3", advance)).toBe(0);
+  });
+
+  it("finds nothing in a name without moves", () => {
+    expect(countNamedPlies("Advance Variation Main lines: Introduction", advance)).toBe(0);
+    expect(countNamedPlies("What is a 'hook'?", advance)).toBe(0);
+  });
+
+  it("counts from a custom start position", () => {
+    expect(countNamedPlies("24...Rg8 25.Qf3", ["Rg8", "Qf3", "Nf6"], 47)).toBe(2);
   });
 });
 
@@ -51,5 +86,14 @@ describe("getLinePreviews", () => {
       { moves: "" },
     ]);
     expect(previews).toEqual(["2.d4 d5", "2.Nc3 d5", "24...Rg8 25.Qf3", ""]);
+  });
+
+  it("starts after the moves the name spells out", () => {
+    const previews = getLinePreviews([
+      { moves: "e4 c6 d4 d5 e5 c5 dxc5 Nc6 Nf3 Bg4 Bb5 e6 Be3 Ne7", name: "4.dxc5 Nc6 5.Nf3 Bg4 6.Bb5 e6 with 7.Be3" },
+      { moves: "e4 c6 d4 d5 e5 c5 dxc5 Nc6 Nf3 Bg4 c3 e6", name: "Main lines: Introduction" },
+      { moves: "e4 c6 d4 d5 e5 c5 dxc5 Nc6 f4", name: "4.dxc5 Nc6 5.f4" },
+    ]);
+    expect(previews).toEqual(["7...Ne7", "5.Nf3 Bg4 6.c3 e6", ""]);
   });
 });
