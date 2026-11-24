@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CircleCheck, CircleX, Info, Loader2, TriangleAlert, X } from "@lucide/vue";
+import { CircleCheckIcon, OctagonXIcon, InfoIcon, Loader2Icon, TriangleAlertIcon, XIcon } from "@lucide/vue";
 import { reactiveOmit } from "@vueuse/core";
 import { cn } from "cn";
 import type { ToasterProps } from "vue-sonner";
@@ -33,24 +33,24 @@ const delegatedProps = reactiveOmit(props, "class", "toastOptions");
     v-bind="delegatedProps"
   >
     <template #success-icon>
-      <CircleCheck class="size-4" />
+      <CircleCheckIcon class="size-4" />
     </template>
     <template #info-icon>
-      <Info class="size-4" />
+      <InfoIcon class="size-4" />
     </template>
     <template #warning-icon>
-      <TriangleAlert class="size-4" />
+      <TriangleAlertIcon class="size-4" />
     </template>
     <template #error-icon>
-      <CircleX class="size-4" />
+      <OctagonXIcon class="size-4" />
     </template>
     <template #loading-icon>
       <div>
-        <Loader2 class="size-4 animate-spin" />
+        <Loader2Icon class="size-4 animate-spin" />
       </div>
     </template>
     <template #close-icon>
-      <X class="size-4" />
+      <XIcon class="size-4" />
     </template>
   </Sonner>
 </template>

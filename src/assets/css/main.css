@@ -1,7 +1,8 @@
 @import "tailwindcss" source(none);
 @import "tw-animate-css";
 @import "shadcn-vue/tailwind.css";
-@import "@fontsource-variable/crimson-pro";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/inter/wght-italic.css";
 @source "../../**/*.vue";
 @source "../../**/*.ts";
 @source "../../../index.html";
@@ -9,33 +10,14 @@
 
 @theme {
   --font-sans:
-    Inter var, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Inter Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
     "Noto Color Emoji";
-  --font-serif: "Crimson Pro Variable", ui-serif, Georgia, serif;
-
   --grid-template-columns-16: repeat(16, minmax(0, 1fr));
 
   --spacing-1\/8: 12.5%;
 }
 
 @layer base {
-  @font-face {
-    font-family: "Inter var";
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url("/fonts/Inter-roman.var.woff2?v=3.19") format("woff2");
-    font-named-instance: "Regular";
-  }
-
-  @font-face {
-    font-family: "Inter var";
-    font-style: italic;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url("/fonts/Inter-italic.var.woff2?v=3.19") format("woff2");
-    font-named-instance: "Italic";
-  }
   * {
     @apply border-border outline-ring/50;
   }
