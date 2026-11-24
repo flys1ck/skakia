@@ -53,7 +53,7 @@
       node.nextPosition && "..."
     }}</span>
     <div
-      class="bg-muted text-muted-foreground relative col-span-full p-2 text-xs wrap-break-word shadow-inner 2xl:text-sm"
+      class="bg-muted/50 text-foreground/90 relative col-span-full border-y px-2 py-1.5 text-xs/[18px] wrap-break-word"
     >
       <span
         class="absolute inset-y-0"
@@ -62,7 +62,7 @@
             'left-0 border-l-4': node.move?.piece.color === 'white',
             'right-0 border-r-4': node.move?.piece.color === 'black',
           },
-          node.id === activeNodeId ? 'border-primary/60' : 'border-border',
+          node.id === activeNodeId ? 'border-primary/60' : 'border-muted-foreground/20',
         ]"
         aria-hidden
       />

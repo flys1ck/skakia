@@ -41,7 +41,9 @@
               :class="line.id === activeLineId ? 'bg-primary/15 text-foreground' : 'hover:bg-muted'"
               :data-active="line.id === activeLineId || undefined"
             >
-              <span class="truncate" :class="{ 'font-medium': line.id === activeLineId }">{{ line.name }}</span>
+              <span class="truncate" :class="{ 'font-medium': line.id === activeLineId }" :title="line.name">{{
+                line.name
+              }}</span>
               <span v-if="line.preview" class="text-muted-foreground truncate text-xs">{{ line.preview }}</span>
             </RouterLink>
           </li>
@@ -102,7 +104,11 @@ async function loadLines() {
     .compile();
   const rows = await select(query);
   const previews = getLinePreviews(
-    rows.map((row) => ({ moves: row.moves, startFen: row.fen_tag?.slice(0, row.fen_tag.indexOf('"')) }))
+    rows.map((row) => ({
+      moves: row.moves,
+      startFen: row.fen_tag?.slice(0, row.fen_tag.indexOf('"')),
+      name: row.name,
+    }))
   );
   lines.value = rows.map((row, i) => ({ id: row.id, name: row.name, preview: previews[i] }));
 }
