@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { MoreHorizontal } from "@lucide/vue";
+import { MoreHorizontalIcon } from "@lucide/vue";
 import { cn } from "cn";
 import type { HTMLAttributes } from "vue";
 
@@ -16,7 +16,7 @@ const props = defineProps<{
     :class="cn('flex size-5 items-center justify-center [&>svg]:size-4', props.class)"
   >
     <slot>
-      <MoreHorizontal />
+      <MoreHorizontalIcon />
     </slot>
     <span class="sr-only">More</span>
   </span>
