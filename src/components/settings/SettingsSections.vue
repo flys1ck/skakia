@@ -100,6 +100,23 @@
         </Suspense>
       </template>
     </BaseSettingsSection>
+    <Separator class="my-8" />
+    <!-- Credits -->
+    <BaseSettingsSection heading="Credits">
+      <template #description> Artwork made by others and used in Skakia. </template>
+      <template #form>
+        <p class="text-sm">
+          Study cover pieces are the
+          <Button variant="link" class="h-auto p-0" @click="openUrl('https://github.com/philatype/kosal')">
+            Kosal<ExternalLink data-icon="inline-end" />
+          </Button>
+          set by Philatype, licensed under
+          <Button variant="link" class="h-auto p-0" @click="openUrl('https://creativecommons.org/licenses/by/4.0/')">
+            CC BY 4.0<ExternalLink data-icon="inline-end" />
+          </Button>
+        </p>
+      </template>
+    </BaseSettingsSection>
   </div>
 </template>
 

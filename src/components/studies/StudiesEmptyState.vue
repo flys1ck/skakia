@@ -9,7 +9,7 @@
     </EmptyHeader>
     <EmptyContent>
       <Button as-child>
-        <RouterLink to="/studies/new"><Plus data-icon="inline-start" />Create a new study</RouterLink>
+        <RouterLink to="/studies/new"><Plus data-icon="inline-start" />Create study</RouterLink>
       </Button>
     </EmptyContent>
   </Empty>
