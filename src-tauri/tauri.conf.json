@@ -50,6 +50,7 @@
     }
   },
   "app": {
+    "macOSPrivateApi": true,
     "withGlobalTauri": true,
     "windows": [
       {
@@ -59,7 +60,16 @@
         "resizable": true,
         "title": "Skakia",
         "width": 1280,
-        "useHttpsScheme": true
+        "useHttpsScheme": true,
+        "theme": "Light",
+        "transparent": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": { "x": 13, "y": 23 },
+        "windowEffects": {
+          "effects": ["hudWindow", "mica"],
+          "state": "active"
+        }
       }
     ],
     "security": {

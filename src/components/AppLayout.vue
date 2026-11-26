@@ -1,9 +1,11 @@
 <template>
-  <div class="flex h-screen overflow-hidden bg-linear-160/srgb from-rose-200 via-fuchsia-100 via-60% to-violet-50">
+  <div
+    class="linux:from-rose-300 linux:via-fuchsia-300 linux:to-violet-300 flex h-screen overflow-hidden bg-linear-to-b/srgb from-rose-300/92 via-fuchsia-300/72 via-50% to-violet-300/55"
+  >
     <NavigationSidebar />
     <main class="flex min-w-0 grow flex-col overflow-y-auto">
       <div class="flex min-h-0 min-w-0 grow flex-col">
-        <header class="flex h-12 shrink-0 items-center gap-3 pr-3 pl-4">
+        <header data-tauri-drag-region class="flex h-12 shrink-0 items-center gap-3 pr-3 pl-4">
           <template v-if="studyOrigin.returnLink">
             <Button variant="outline" size="sm" class="shrink-0" as-child>
               <RouterLink :to="studyOrigin.returnLink.to">

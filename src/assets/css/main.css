@@ -7,6 +7,8 @@
 @source "../../**/*.ts";
 @source "../../../index.html";
 @custom-variant dark (&:is([data-theme="dark"] *));
+@custom-variant macos (&:is([data-platform="macos"] *));
+@custom-variant linux (&:is([data-platform="linux"] *));
 
 @theme {
   --font-sans:
@@ -22,7 +24,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     @apply font-sans;
   }
 }
