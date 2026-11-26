@@ -8,6 +8,14 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "./assets/css/main.css";
 
+// The window is transparent with a native blur behind it on macOS and Windows. Linux has no blur, so it keeps an opaque frame.
+const userAgent = navigator.userAgent;
+document.documentElement.dataset.platform = userAgent.includes("Mac")
+  ? "macos"
+  : userAgent.includes("Windows")
+    ? "windows"
+    : "linux";
+
 const app = createApp(App);
 app.use(pinia).use(router).use(VueQueryPlugin, { queryClient });
 

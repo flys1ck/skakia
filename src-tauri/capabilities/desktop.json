@@ -8,6 +8,7 @@
     "sql:default",
     "sql:allow-execute",
     "core:default",
+    "core:window:allow-start-dragging",
     "mcp-bridge:default",
     {
       "identifier": "shell:allow-spawn",

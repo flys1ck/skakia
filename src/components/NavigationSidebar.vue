@@ -1,5 +1,9 @@
 <template>
-  <nav aria-label="Main" class="text-sidebar-foreground flex w-18 shrink-0 flex-col items-center gap-5 pt-3 pb-4">
+  <nav
+    aria-label="Main"
+    data-tauri-drag-region
+    class="text-sidebar-foreground macos:pt-13 flex w-18 shrink-0 flex-col items-center gap-5 pt-3 pb-4"
+  >
     <RouterLink :to="navigationItems.analysis.to" class="rounded-lg">
       <img :src="appLogo" alt="Skakia" class="size-9" />
     </RouterLink>

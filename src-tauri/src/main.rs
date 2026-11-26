@@ -32,6 +32,13 @@ fn main() {
                 }
             }
 
+            // The hudWindow material behind the frame only blurs the desktop in the dark appearance. The config keeps
+            // the light theme for Windows and Linux, where a dark theme would darken the native title bar.
+            #[cfg(target_os = "macos")]
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.set_theme(Some(tauri::Theme::Dark));
+            }
+
             let app_config_path = app
                 .path()
                 .app_config_dir()
