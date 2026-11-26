@@ -15,7 +15,7 @@
     >
       <DialogHeader class="border-b px-6 py-4">
         <DialogTitle>Settings</DialogTitle>
-        <DialogDescription class="sr-only">Accounts, sound and study storage.</DialogDescription>
+        <DialogDescription class="sr-only">Accounts, sound, study storage and credits.</DialogDescription>
       </DialogHeader>
       <div class="overflow-y-auto px-6 py-6">
         <SettingsSections />

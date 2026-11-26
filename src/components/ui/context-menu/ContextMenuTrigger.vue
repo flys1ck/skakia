@@ -1,0 +1,18 @@
+<script setup lang="ts">
+import { reactiveOmit } from "@vueuse/core";
+import { cn } from "cn";
+import type { ContextMenuTriggerProps } from "reka-ui";
+import { ContextMenuTrigger, useForwardProps } from "reka-ui";
+import type { HTMLAttributes } from "vue";
+
+const props = defineProps<ContextMenuTriggerProps & { class?: HTMLAttributes["class"] }>();
+
+const delegatedProps = reactiveOmit(props, "class");
+const forwardedProps = useForwardProps(delegatedProps);
+</script>
+
+<template>
+  <ContextMenuTrigger data-slot="context-menu-trigger" v-bind="forwardedProps" :class="cn('select-none', props.class)">
+    <slot />
+  </ContextMenuTrigger>
+</template>
