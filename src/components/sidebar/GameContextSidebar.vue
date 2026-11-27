@@ -6,7 +6,7 @@
     :unmount-on-hide="false"
     class="bg-card flex w-96 shrink-0 flex-col gap-0 border-l 2xl:w-120"
   >
-    <TabsList class="mx-1 mt-1 w-auto">
+    <TabsList class="mx-1 my-1 w-auto">
       <TabsTrigger v-for="tab in TABS" :key="tab" :value="tab">{{ tab }}</TabsTrigger>
     </TabsList>
     <!-- Game Tab -->
@@ -126,16 +126,16 @@
         </div>
       </template>
     </TabsContent>
-    <!-- Positions Tab -->
-    <TabsContent value="Positions" class="flex grow flex-col overflow-hidden text-base">
-      <GamePositions :game="game" @line-click="selectedTab = 'Game'" />
+    <!-- Explorer Tab -->
+    <TabsContent value="Explorer" class="flex grow flex-col overflow-hidden text-base">
+      <GameExplorer :game="game" @line-click="selectedTab = 'Game'" />
     </TabsContent>
   </Tabs>
 </template>
 
 <script setup lang="ts">
 import GameEvaluation from "@components/sidebar/GameEvaluation.vue";
-import GamePositions from "@components/sidebar/GamePositions.vue";
+import GameExplorer from "@components/sidebar/GameExplorer.vue";
 import GameTreeItem from "@components/sidebar/GameTreeItem.vue";
 import { useGame } from "@composables/useGame";
 import { DrawShape } from "@lichess-org/chessground/draw";
@@ -163,7 +163,7 @@ const props = defineProps<{
   showNewGame?: boolean;
 }>();
 
-const TABS = ["Game", "Positions"];
+const TABS = ["Game", "Explorer"];
 const selectedTab = ref("Game");
 const moveListRef = ref<HTMLElement>();
 
