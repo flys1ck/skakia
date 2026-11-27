@@ -1,7 +1,7 @@
 <template>
   <div class="relative py-2 text-center">
     <Separator class="absolute inset-x-2 top-1/2 data-[orientation=horizontal]:w-auto" />
-    <span class="text-muted-foreground bg-background relative px-2 text-xs font-light tracking-wider uppercase">
+    <span class="text-muted-foreground bg-card relative px-2 text-xs font-light tracking-wider uppercase">
       {{ heading }}
     </span>
   </div>
