@@ -3,7 +3,7 @@
     class="linux:from-rose-300 linux:via-fuchsia-300 linux:to-violet-300 flex h-screen overflow-hidden bg-linear-to-b/srgb from-rose-300/92 via-fuchsia-300/72 via-50% to-violet-300/55"
   >
     <NavigationSidebar />
-    <main class="flex min-w-0 grow flex-col overflow-y-auto">
+    <main class="flex min-w-0 grow flex-col overflow-y-auto pr-1.5 pb-1.5">
       <div class="flex min-h-0 min-w-0 grow flex-col">
         <header data-tauri-drag-region class="flex h-12 shrink-0 items-center gap-3 pr-3 pl-4">
           <template v-if="studyOrigin.returnLink">
@@ -40,7 +40,8 @@
           Suspense must stay inside RouterView: around it, Vue holds back RouterView updates while an async page is pending, and a page that fails to load blocks navigation.
           timeout="0" unmounts the previous page right away: kept alive, its route param watchers would fire with the next route's params.
         -->
-        <div class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-tl-xl border-t border-l">
+        <!-- 4px corners stay concentric with the 10px macOS window corner across the 6px frame. -->
+        <div class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-sm border">
           <RouterView v-slot="{ Component: page }">
             <Suspense v-if="page" :timeout="0">
               <Component :is="page" />
