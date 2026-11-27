@@ -63,6 +63,7 @@
         "useHttpsScheme": true,
         "theme": "Light",
         "transparent": true,
+        "shadow": false,
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
         "trafficLightPosition": { "x": 13, "y": 23 },
