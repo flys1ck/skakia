@@ -24,8 +24,14 @@ pub enum ImportTarget {
     },
     NewStudy {
         name: String,
-        description: Option<String>,
+        authors: Vec<StudyAuthor>,
     },
+}
+
+#[derive(Debug, Deserialize)]
+pub struct StudyAuthor {
+    pub name: String,
+    pub title: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -141,12 +147,22 @@ pub fn import_plan(
                     .get_result::<Id>(connection)?
                     .id
             }
-            ImportTarget::NewStudy { name, description } => {
-                sql_query("insert into studies (name, description) values (?, ?) returning id")
+            ImportTarget::NewStudy { name, authors } => {
+                let study_id = sql_query("insert into studies (name) values (?) returning id")
                     .bind::<Text, _>(name)
-                    .bind::<Nullable<Text>, _>(description)
                     .get_result::<Id>(connection)?
-                    .id
+                    .id;
+                for (position, author) in authors.iter().enumerate() {
+                    sql_query(
+                        "insert into study_authors (study, position, name, title) values (?, ?, ?, ?)",
+                    )
+                    .bind::<Integer, _>(study_id)
+                    .bind::<Integer, _>(position as i32)
+                    .bind::<Text, _>(&author.name)
+                    .bind::<Nullable<Text>, _>(&author.title)
+                    .execute(connection)?;
+                }
+                study_id
             }
         };
 
@@ -300,7 +316,7 @@ mod tests {
     fn new_study(name: &str) -> ImportTarget {
         ImportTarget::NewStudy {
             name: name.to_owned(),
-            description: None,
+            authors: Vec::new(),
         }
     }
 
@@ -546,6 +562,113 @@ mod tests {
                 "{table} should be empty"
             );
         }
+    }
+
+    #[test]
+    fn stores_the_authors_of_a_new_study_in_order() {
+        let mut connection = migrated_connection();
+        let target = ImportTarget::NewStudy {
+            name: "Repertoire".to_owned(),
+            authors: vec![
+                StudyAuthor {
+                    name: "Mark Dvoretsky".to_owned(),
+                    title: Some("GM".to_owned()),
+                },
+                StudyAuthor {
+                    name: "Max".to_owned(),
+                    title: None,
+                },
+            ],
+        };
+        let plan = ImportPlan {
+            chapters: vec![chapter("Chapter", vec![line("Main", &[("start", "d4")])])],
+        };
+
+        let study_id = import_plan(&mut connection, &target, &plan, |_| {}).expect("import");
+
+        let authors = sql_query(
+            "select coalesce(title || ' ', '') || name as author from study_authors
+             where study = ? order by position",
+        )
+        .bind::<Integer, _>(study_id)
+        .load::<Author>(&mut connection)
+        .expect("authors")
+        .into_iter()
+        .map(|row| row.author)
+        .collect::<Vec<_>>();
+        assert_eq!(authors, vec!["GM Mark Dvoretsky", "Max"]);
+    }
+
+    #[test]
+    fn a_new_study_shares_its_author_titles_with_other_studies() {
+        let mut connection = migrated_connection();
+        let plan = ImportPlan {
+            chapters: Vec::new(),
+        };
+        let study = |name: &str, author: &str, title: Option<&str>| ImportTarget::NewStudy {
+            name: name.to_owned(),
+            authors: vec![StudyAuthor {
+                name: author.to_owned(),
+                title: title.map(str::to_owned),
+            }],
+        };
+
+        import_plan(
+            &mut connection,
+            &study("First", "Daniel Naroditsky", Some("IM")),
+            &plan,
+            |_| {},
+        )
+        .expect("first study");
+        import_plan(
+            &mut connection,
+            &study("Second", "daniel naroditsky", Some("GM")),
+            &plan,
+            |_| {},
+        )
+        .expect("second study");
+
+        let authors = sql_query(
+            "select coalesce(title || ' ', '') || name as author from study_authors order by id",
+        )
+        .load::<Author>(&mut connection)
+        .expect("authors")
+        .into_iter()
+        .map(|row| row.author)
+        .collect::<Vec<_>>();
+        assert_eq!(
+            authors,
+            vec!["GM Daniel Naroditsky", "GM daniel naroditsky"]
+        );
+    }
+
+    #[test]
+    fn an_unknown_title_rolls_back_the_new_study() {
+        let mut connection = migrated_connection();
+        let target = ImportTarget::NewStudy {
+            name: "Repertoire".to_owned(),
+            authors: vec![StudyAuthor {
+                name: "Max".to_owned(),
+                title: Some("XM".to_owned()),
+            }],
+        };
+        let plan = ImportPlan {
+            chapters: vec![chapter("Chapter", vec![line("Main", &[("start", "d4")])])],
+        };
+
+        let result = import_plan(&mut connection, &target, &plan, |_| {});
+
+        assert!(result.is_err());
+        assert_eq!(
+            count(&mut connection, "select count(*) as count from studies"),
+            0
+        );
+    }
+
+    #[derive(QueryableByName)]
+    struct Author {
+        #[diesel(sql_type = Text)]
+        author: String,
     }
 
     #[test]

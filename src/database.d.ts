@@ -51,9 +51,16 @@ export interface Settings {
 
 export interface Studies {
   created_at: Generated<string>;
-  description: string | null;
   id: Generated<number>;
   name: string;
+}
+
+export interface StudyAuthors {
+  id: Generated<number>;
+  name: string;
+  position: number;
+  study: number;
+  title: string | null;
 }
 
 export interface DB {
@@ -63,4 +70,5 @@ export interface DB {
   positions: Positions;
   settings: Settings;
   studies: Studies;
+  study_authors: StudyAuthors;
 }

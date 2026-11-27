@@ -6,7 +6,7 @@
         <SearchX />
       </EmptyMedia>
       <EmptyTitle>No matching studies</EmptyTitle>
-      <EmptyDescription>No study name or description contains “{{ search.trim() }}”.</EmptyDescription>
+      <EmptyDescription>No study name or author contains “{{ search.trim() }}”.</EmptyDescription>
     </EmptyHeader>
   </Empty>
   <ul role="list" v-else class="grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4">
@@ -49,7 +49,9 @@ import StudyCard from "@components/studies/StudyCard.vue";
 import StudyImportProgress from "@components/studies/StudyImportProgress.vue";
 import { SearchX } from "@lucide/vue";
 import { db, execute, select } from "@services/database";
+import { loadStudyAuthors } from "@services/studyAuthors";
 import { useStudyImport } from "@stores/useStudyImport";
+import { formatAuthor } from "@utilities/studyAuthors";
 import { assignCollectorNumbers, assignCoverStyles } from "@utilities/studyCover";
 import { sql } from "kysely";
 import { computed, ref, watch } from "vue";
@@ -78,7 +80,6 @@ const query = db
   .select(({ fn }) => [
     "studies.id",
     "studies.name",
-    "studies.description",
     fn.count<number>("chapters.id").distinct().as("chapter_count"),
     fn.count<number>("lines.id").as("line_count"),
     sql<number>`count(case when lines.orientation = 'white' then 1 end)`.as("white_line_count"),
@@ -97,11 +98,11 @@ function getStudySide(whiteLines: number, blackLines: number): StudySummary["sid
 }
 
 async function loadStudies(): Promise<StudySummary[]> {
-  const rows = await select(query);
+  const [rows, authorsByStudy] = await Promise.all([select(query), loadStudyAuthors()]);
   return rows.map((row) => ({
     id: row.id,
     name: row.name,
-    description: row.description,
+    authors: authorsByStudy.get(row.id) ?? [],
     chapterCount: row.chapter_count,
     lineCount: row.line_count,
     side: getStudySide(row.white_line_count, row.black_line_count),
@@ -117,7 +118,7 @@ const visibleStudies = computed(() => {
   const search = props.search.trim().toLocaleLowerCase();
   if (!search) return studies.value;
   return studies.value.filter((study) =>
-    `${study.name}\n${study.description ?? ""}`.toLocaleLowerCase().includes(search)
+    [study.name, ...study.authors.map(formatAuthor)].join("\n").toLocaleLowerCase().includes(search)
   );
 });
 

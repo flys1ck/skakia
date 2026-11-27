@@ -13,10 +13,7 @@
           />
           <FieldError v-if="nameError">{{ nameError }}</FieldError>
         </Field>
-        <Field>
-          <FieldLabel for="study-description">Description</FieldLabel>
-          <Textarea id="study-description" name="description" rows="3" v-model="studyFormData.description" />
-        </Field>
+        <StudyAuthorsField v-model="studyFormData.authors" />
       </FieldGroup>
       <FieldSet class="mt-8">
         <FieldLegend>Import PGN</FieldLegend>
@@ -35,12 +32,16 @@
 
 <script setup lang="ts">
 import BaseContainer from "@components/base/BaseContainer.vue";
+import StudyAuthorsField from "@components/studies/StudyAuthorsField.vue";
 import StudyImportFields from "@components/studies/StudyImportFields.vue";
 import { useStudyImportPlan } from "@composables/useStudyImportPlan";
 import { navigationItems } from "@data/navigationItems";
-import { db, execute, selectFirst } from "@services/database";
+import { db, selectFirst } from "@services/database";
+import { loadKnownAuthors } from "@services/studyAuthors";
+import { importStudy } from "@services/studyImport";
 import { useBreadcrumbs } from "@stores/useBreadcrumbs";
 import { useStudyImport } from "@stores/useStudyImport";
+import { StudyAuthor, cleanAuthors, parseAnnotator, toKnownAuthor } from "@utilities/studyAuthors";
 import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
@@ -55,7 +56,6 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { EditableStudy } from "@/types";
 
 const { setBreadcrumbs } = useBreadcrumbs();
@@ -70,7 +70,7 @@ setBreadcrumbs([
 const router = useRouter();
 const studyFormData = reactive<EditableStudy>({
   name: "",
-  description: "",
+  authors: [],
 });
 const nameError = ref<string>();
 const studyImport = useStudyImport();
@@ -83,32 +83,38 @@ watch(games, (games) => {
   studyFormData.name = suggestedName;
 });
 
+const knownAuthors = await loadKnownAuthors();
+let suggestedAuthors: StudyAuthor[] = [];
+watch(games, (games) => {
+  const hasOwnAuthors = JSON.stringify(cleanAuthors(studyFormData.authors)) !== JSON.stringify(suggestedAuthors);
+  if (hasOwnAuthors) return;
+  const annotator = games.find((game) => game.headers.get("Annotator")?.trim())?.headers.get("Annotator") ?? "";
+  // A PGN may carry an author's title from when it was written, so the title the app already knows wins.
+  suggestedAuthors = parseAnnotator(annotator).map((author) => toKnownAuthor(author, knownAuthors));
+  studyFormData.authors = suggestedAuthors.map((author) => ({ ...author }));
+});
+
 async function onSubmit() {
   const name = studyFormData.name.trim();
   nameError.value = name ? undefined : "Name is required";
   if (nameError.value) return;
+  const authors = cleanAuthors(studyFormData.authors);
 
   try {
     const existingStudy = await selectFirst(db.selectFrom("studies").select("id").where("name", "=", name).compile());
     nameError.value = existingStudy ? "A study with this name already exists" : undefined;
     if (nameError.value) return;
 
+    const target = { type: "newStudy", name, authors } as const;
     if (plan.value && lineCount.value) {
-      const target = { type: "newStudy", name, description: studyFormData.description || null } as const;
       void studyImport.start(target, plan.value, name);
       await router.push("/studies");
       return;
     }
 
-    const query = db
-      .insertInto("studies")
-      .values({ ...studyFormData, name })
-      .compile();
-    const result = await execute(query);
-
-    if (!result) return;
+    const studyId = await importStudy(target, { chapters: [], warnings: [] }, () => {});
     toast.success(`Study ${name} created`);
-    router.push(`/studies/${result.lastInsertId}`);
+    router.push(`/studies/${studyId}`);
   } catch {
     toast.error("Couldn't create study", {
       description: "Please try again.",

@@ -1,14 +1,14 @@
-import { Studies } from "@/database";
-import { Insertable } from "kysely";
+import { StudyAuthor } from "@utilities/studyAuthors";
 
-type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
-
-export type EditableStudy = Pick<NoUndefinedField<Insertable<Studies>>, "name" | "description">;
+export interface EditableStudy {
+  name: string;
+  authors: StudyAuthor[];
+}
 
 export interface StudySummary {
   id: number;
   name: string;
-  description: string | null;
+  authors: StudyAuthor[];
   chapterCount: number;
   lineCount: number;
   side?: "white" | "black" | "both";

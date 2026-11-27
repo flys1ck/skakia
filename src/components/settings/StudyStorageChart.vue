@@ -59,8 +59,15 @@ const studyStorageQuery = sql<StudyStorage>`
       studies.id,
       length(cast(studies.created_at as blob))
         + length(cast(studies.name as blob))
-        + length(cast(coalesce(studies.description, '') as blob))
     from studies
+
+    union all
+
+    select
+      study_authors.study,
+      length(cast(study_authors.name as blob))
+        + length(cast(coalesce(study_authors.title, '') as blob))
+    from study_authors
 
     union all
 
