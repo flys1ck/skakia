@@ -30,7 +30,7 @@
             <EmptyDescription>{{ option.connectHint }}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button @click="settingsDialog.isOpen = true">Open settings</Button>
+            <Button @click="settingsDialog.open('integrations')">Open settings</Button>
           </EmptyContent>
         </Empty>
       </TabsContent>
