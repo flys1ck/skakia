@@ -7,11 +7,16 @@
           class="group has-focus-visible:ring-ring/50 data-[state=open]:ring-ring/50 relative isolate flex aspect-[3/4] flex-col overflow-hidden rounded-2xl text-neutral-900 ring-1 ring-black/5 transition-transform has-focus-visible:ring-3 data-[state=open]:ring-3 motion-safe:hover:-translate-y-0.5"
           @keydown="onKeydown"
         >
-          <StudyCover :name="study.name" :cover-style="coverStyle" :side="study.side" />
+          <StudyCover
+            :name="study.name"
+            :cover-style="coverStyle"
+            :side="study.side"
+            :collector-number="collectorNumber"
+          />
           <h2 class="line-clamp-4 p-4 text-lg leading-snug font-semibold text-balance">
             {{ study.name }}
           </h2>
-          <div :id="detailsId" class="mt-auto space-y-3 p-4">
+          <div :id="detailsId" class="mt-auto space-y-3 p-4 pb-6">
             <StudyImportProgress
               v-if="isImporting"
               class="**:data-[slot=progress]:bg-black/10 [&_p]:text-neutral-600"
@@ -78,7 +83,7 @@ import {
 } from "@/components/ui/context-menu";
 import { StudySummary } from "@/types";
 
-const props = defineProps<{ study: StudySummary; coverStyle: StudyCoverStyle }>();
+const props = defineProps<{ study: StudySummary; coverStyle: StudyCoverStyle; collectorNumber: string }>();
 const emit = defineEmits<{ delete: [] }>();
 
 const SIDE_LABELS: Record<NonNullable<StudySummary["side"]>, string> = {

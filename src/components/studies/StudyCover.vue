@@ -27,6 +27,24 @@
         :style="piece.style"
       />
     </div>
+    <!-- An ellipse reaching the corners passes the edge midpoints at about 70%, so the frame fades there and keeps its corners. -->
+    <div
+      class="absolute inset-2.5 rounded-md border [mask-image:radial-gradient(rgb(0_0_0/0.3)_72%,rgb(0_0_0/0.7))]"
+      :style="{ borderColor: cover.pixel }"
+    />
+    <div
+      class="absolute inset-x-4 bottom-2.5 flex translate-y-1/2 items-center justify-between text-[0.625rem] leading-none tracking-wider tabular-nums"
+      :style="{ color: cover.ink }"
+    >
+      <span v-if="side" class="-ml-1 px-1" :style="{ backgroundColor: cover.background }">
+        <svg class="size-2.5" viewBox="0 0 10 10">
+          <circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.2" />
+          <circle v-if="side === 'black'" cx="5" cy="5" r="4" fill="currentColor" />
+          <path v-else-if="side === 'both'" d="M5 1a4 4 0 0 0 0 8z" fill="currentColor" />
+        </svg>
+      </span>
+      <span class="-mr-1 ml-auto px-1" :style="{ backgroundColor: cover.background }">{{ collectorNumber }}</span>
+    </div>
   </div>
 </template>
 
@@ -36,7 +54,12 @@ import { StudyCoverStyle } from "@utilities/studyCover";
 import { computed } from "vue";
 import { StudySummary } from "@/types";
 
-const props = defineProps<{ name: string; coverStyle: StudyCoverStyle; side: StudySummary["side"] }>();
+const props = defineProps<{
+  name: string;
+  coverStyle: StudyCoverStyle;
+  side: StudySummary["side"];
+  collectorNumber: string;
+}>();
 
 const COLUMNS = 15;
 const ROWS = 20;
@@ -83,6 +106,7 @@ const cover = computed(() => {
   return {
     background: `oklch(0.93 0.035 ${hue})`,
     pixel: `oklch(0.8 0.07 ${hue})`,
+    ink: `oklch(0.6 0.07 ${hue})`,
     pixels,
     pieces,
   };

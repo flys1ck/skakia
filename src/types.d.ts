@@ -5,14 +5,10 @@ type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]
 
 export type EditableStudy = Pick<NoUndefinedField<Insertable<Studies>>, "name" | "description">;
 
-export type StudySort = "recent" | "name" | "created";
-
 export interface StudySummary {
   id: number;
   name: string;
   description: string | null;
-  createdAt: string;
-  updatedAt: string;
   chapterCount: number;
   lineCount: number;
   side?: "white" | "black" | "both";

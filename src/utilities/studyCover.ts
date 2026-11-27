@@ -33,3 +33,12 @@ export function assignCoverStyles(studies: { id: number; name: string }[]): Map<
   const pieces = assignDistinct(studies, COVER_PIECES, "\npiece");
   return new Map(studies.map((study) => [study.id, { hue: hues.get(study.id)!, piece: pieces.get(study.id)! }]));
 }
+
+/**
+ * Numbers studies in the order given out of the total, like `007/024`, so removing one renumbers the later ones.
+ */
+export function assignCollectorNumbers(studies: { id: number }[]): Map<number, string> {
+  const digits = Math.max(3, String(studies.length).length);
+  const total = String(studies.length).padStart(digits, "0");
+  return new Map(studies.map((study, index) => [study.id, `${String(index + 1).padStart(digits, "0")}/${total}`]));
+}
