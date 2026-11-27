@@ -27,6 +27,14 @@ function assignDistinct<T>(studies: { id: number; name: string }[], options: rea
   return assigned;
 }
 
+export function coverColors(hue: number) {
+  return {
+    background: `oklch(0.93 0.035 ${hue})`,
+    tint: `oklch(0.8 0.07 ${hue})`,
+    ink: `oklch(0.6 0.07 ${hue})`,
+  };
+}
+
 export function assignCoverStyles(studies: { id: number; name: string }[]): Map<number, StudyCoverStyle> {
   // The hue uses the name alone, which keeps the colors studies already have.
   const hues = assignDistinct(studies, COVER_HUES, "");
