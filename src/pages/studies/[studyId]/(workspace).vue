@@ -3,13 +3,13 @@
     <!-- v-show keeps expanded chapters and their loaded lines while the panel is hidden -->
     <StudyWorkspacePanel
       v-show="isPanelOpen"
-      class="w-60 shrink-0 border-r xl:w-72"
+      class="bg-card w-60 shrink-0 border-r xl:w-72"
       :study-id="studyId"
       :chapter-id="chapterId"
       :line-id="lineId"
       @collapse="isPanelOpen = false"
     />
-    <div v-if="!isPanelOpen" class="shrink-0 border-r p-1.5">
+    <div v-if="!isPanelOpen" class="bg-card shrink-0 border-r p-1.5">
       <Tooltip>
         <TooltipTrigger as-child>
           <Button size="icon-sm" variant="ghost" aria-label="Show chapters" @click="isPanelOpen = true">

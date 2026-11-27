@@ -1,6 +1,6 @@
 <template>
   <div
-    class="linux:from-rose-300 linux:via-fuchsia-300 linux:to-violet-300 flex h-screen overflow-hidden bg-linear-to-b/srgb from-rose-300/92 via-fuchsia-300/72 via-50% to-violet-300/55"
+    class="linux:from-rose-300 linux:via-fuchsia-300 linux:to-violet-300 macos:rounded-[10px] macos:shadow-[inset_0_0_0_1px_rgb(0_0_0/0.18),inset_0_0_0_2px_rgb(255_255_255/0.3)] flex h-screen overflow-hidden bg-linear-to-b/srgb from-rose-300/92 via-fuchsia-300/72 via-50% to-violet-300/55"
   >
     <NavigationSidebar />
     <main class="flex min-w-0 grow flex-col overflow-y-auto pr-1.5 pb-1.5">
@@ -40,13 +40,21 @@
           Suspense must stay inside RouterView: around it, Vue holds back RouterView updates while an async page is pending, and a page that fails to load blocks navigation.
           timeout="0" unmounts the previous page right away: kept alive, its route param watchers would fire with the next route's params.
         -->
-        <!-- 4px corners stay concentric with the 10px macOS window corner across the 6px frame. -->
-        <div class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-sm border">
-          <RouterView v-slot="{ Component: page }">
-            <Suspense v-if="page" :timeout="0">
-              <Component :is="page" />
-            </Suspense>
-          </RouterView>
+        <!--
+          The top shadow is a sibling overlay so white page surfaces (sidebars) don't cover it.
+          Keep the scroll container itself rounded: a rounded overflow-hidden wrapper around it makes WebKit draw a 1px seam across the board.
+        -->
+        <div
+          class="relative flex min-h-0 grow flex-col after:pointer-events-none after:absolute after:inset-x-px after:top-px after:z-20 after:h-3 after:rounded-t-[3px] after:inset-shadow-sm after:inset-shadow-mauve-950/10"
+        >
+          <!-- 4px corners stay concentric with the 10px macOS window corner across the 6px frame. -->
+          <div class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-sm border border-white/60">
+            <RouterView v-slot="{ Component: page }">
+              <Suspense v-if="page" :timeout="0">
+                <Component :is="page" />
+              </Suspense>
+            </RouterView>
+          </div>
         </div>
       </div>
     </main>

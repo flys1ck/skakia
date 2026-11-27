@@ -2,12 +2,9 @@
   <nav
     aria-label="Main"
     data-tauri-drag-region
-    class="text-sidebar-foreground macos:pt-13 flex w-18 shrink-0 flex-col items-center gap-5 pt-3 pb-4"
+    class="text-sidebar-foreground macos:pt-16 flex w-18 shrink-0 flex-col items-center gap-5 pt-3 pb-4"
   >
-    <RouterLink :to="navigationItems.analysis.to" class="rounded-lg">
-      <img :src="appLogo" alt="Skakia" class="size-9" />
-    </RouterLink>
-    <ul class="flex flex-col items-center gap-1.5">
+    <ul class="flex flex-col items-center gap-3">
       <li v-for="{ icon, name, to } in mainNavigationItems" :key="to">
         <RouterLink
           :to="to"
@@ -34,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import appLogo from "@assets/images/logo.svg";
 import { type NavigationItem, navigationItems } from "@data/navigationItems";
 import { Settings } from "@lucide/vue";
 import { useSettingsDialog } from "@stores/useSettingsDialog";

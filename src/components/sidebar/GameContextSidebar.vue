@@ -4,7 +4,7 @@
     as="aside"
     activation-mode="manual"
     :unmount-on-hide="false"
-    class="flex w-96 shrink-0 flex-col gap-0 border-l 2xl:w-120"
+    class="bg-card flex w-96 shrink-0 flex-col gap-0 border-l 2xl:w-120"
   >
     <TabsList class="mx-1 mt-1 w-auto">
       <TabsTrigger v-for="tab in TABS" :key="tab" :value="tab">{{ tab }}</TabsTrigger>
