@@ -40,7 +40,8 @@
           Suspense must stay inside RouterView: around it, Vue holds back RouterView updates while an async page is pending, and a page that fails to load blocks navigation.
           timeout="0" unmounts the previous page right away: kept alive, its route param watchers would fire with the next route's params.
         -->
-        <div class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-xl border">
+        <!-- 4px corners stay concentric with the 10px macOS window corner across the 6px frame. -->
+        <div class="bg-background flex min-h-0 grow flex-col overflow-y-auto rounded-sm border">
           <RouterView v-slot="{ Component: page }">
             <Suspense v-if="page" :timeout="0">
               <Component :is="page" />
