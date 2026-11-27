@@ -27,9 +27,26 @@ function assignDistinct<T>(studies: { id: number; name: string }[], options: rea
   return assigned;
 }
 
+export function coverColors(hue: number) {
+  return {
+    background: `oklch(0.93 0.035 ${hue})`,
+    tint: `oklch(0.8 0.07 ${hue})`,
+    ink: `oklch(0.6 0.07 ${hue})`,
+  };
+}
+
 export function assignCoverStyles(studies: { id: number; name: string }[]): Map<number, StudyCoverStyle> {
   // The hue uses the name alone, which keeps the colors studies already have.
   const hues = assignDistinct(studies, COVER_HUES, "");
   const pieces = assignDistinct(studies, COVER_PIECES, "\npiece");
   return new Map(studies.map((study) => [study.id, { hue: hues.get(study.id)!, piece: pieces.get(study.id)! }]));
+}
+
+/**
+ * Numbers studies in the order given out of the total, like `007/024`, so removing one renumbers the later ones.
+ */
+export function assignCollectorNumbers(studies: { id: number }[]): Map<number, string> {
+  const digits = Math.max(3, String(studies.length).length);
+  const total = String(studies.length).padStart(digits, "0");
+  return new Map(studies.map((study, index) => [study.id, `${String(index + 1).padStart(digits, "0")}/${total}`]));
 }

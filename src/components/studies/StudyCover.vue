@@ -13,7 +13,7 @@
           :y="pixel.y"
           :width="pixel.size"
           :height="pixel.size"
-          :fill="cover.pixel"
+          :fill="cover.tint"
           :opacity="pixel.opacity"
         />
       </svg>
@@ -27,16 +27,43 @@
         :style="piece.style"
       />
     </div>
+    <!-- An ellipse reaching the corners passes the edge midpoints at about 70%, so the frame fades there and keeps its corners. -->
+    <div
+      class="absolute inset-2.5 rounded-md border [mask-image:radial-gradient(rgb(0_0_0/0.3)_72%,rgb(0_0_0/0.7))]"
+      :style="{ borderColor: cover.tint }"
+    />
+    <span
+      class="absolute top-2.5 right-3 -translate-y-1/2 px-1 text-[0.625rem] leading-none tracking-wider tabular-nums"
+      :style="{ color: cover.ink, backgroundColor: cover.background }"
+    >
+      {{ collectorNumber }}
+    </span>
+    <span
+      v-if="side"
+      class="absolute bottom-2.5 left-3 translate-y-1/2 px-1"
+      :style="{ color: cover.ink, backgroundColor: cover.background }"
+    >
+      <svg class="size-2.5" viewBox="0 0 10 10">
+        <circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.2" />
+        <circle v-if="side === 'black'" cx="5" cy="5" r="4" fill="currentColor" />
+        <path v-else-if="side === 'both'" d="M5 1a4 4 0 0 0 0 8z" fill="currentColor" />
+      </svg>
+    </span>
   </div>
 </template>
 
 <script setup lang="ts">
 import { createSeededRandom } from "@utilities/random";
-import { StudyCoverStyle } from "@utilities/studyCover";
+import { coverColors, StudyCoverStyle } from "@utilities/studyCover";
 import { computed } from "vue";
 import { StudySummary } from "@/types";
 
-const props = defineProps<{ name: string; coverStyle: StudyCoverStyle; side: StudySummary["side"] }>();
+const props = defineProps<{
+  name: string;
+  coverStyle: StudyCoverStyle;
+  side: StudySummary["side"];
+  collectorNumber: string;
+}>();
 
 const COLUMNS = 15;
 const ROWS = 20;
@@ -81,8 +108,7 @@ const cover = computed(() => {
   }));
 
   return {
-    background: `oklch(0.93 0.035 ${hue})`,
-    pixel: `oklch(0.8 0.07 ${hue})`,
+    ...coverColors(hue),
     pixels,
     pieces,
   };

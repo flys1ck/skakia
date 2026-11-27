@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createSeededRandom } from "./random";
-import { assignCoverStyles, COVER_HUES, COVER_PIECES } from "./studyCover";
+import { assignCollectorNumbers, assignCoverStyles, COVER_HUES, COVER_PIECES } from "./studyCover";
 
 const preferredHue = (name: string) => COVER_HUES[Math.floor(createSeededRandom(name)() * COVER_HUES.length)];
 const studiesNamed = (name: string, count: number) => Array.from({ length: count }, (_, i) => ({ id: i + 1, name }));
@@ -38,5 +38,21 @@ describe("assignCoverStyles", () => {
     for (const piece of COVER_PIECES) {
       expect(styles.filter((style) => style.piece === piece)).toHaveLength(count / COVER_PIECES.length);
     }
+  });
+});
+
+describe("assignCollectorNumbers", () => {
+  it("numbers studies in the order given out of the total", () => {
+    const numbers = assignCollectorNumbers([{ id: 7 }, { id: 2 }, { id: 5 }]);
+    expect([...numbers]).toEqual([
+      [7, "001/003"],
+      [2, "002/003"],
+      [5, "003/003"],
+    ]);
+  });
+
+  it("widens the number past three digits when the total needs it", () => {
+    const numbers = assignCollectorNumbers(Array.from({ length: 1200 }, (_, i) => ({ id: i + 1 })));
+    expect(numbers.get(1)).toBe("0001/1200");
   });
 });

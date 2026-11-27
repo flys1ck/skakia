@@ -7,20 +7,32 @@
           class="group has-focus-visible:ring-ring/50 data-[state=open]:ring-ring/50 relative isolate flex aspect-[3/4] flex-col overflow-hidden rounded-2xl text-neutral-900 ring-1 ring-black/5 transition-transform has-focus-visible:ring-3 data-[state=open]:ring-3 motion-safe:hover:-translate-y-0.5"
           @keydown="onKeydown"
         >
-          <StudyCover :name="study.name" :cover-style="coverStyle" :side="study.side" />
-          <h2 class="line-clamp-4 p-4 text-lg leading-snug font-semibold text-balance">
+          <StudyCover
+            :name="study.name"
+            :cover-style="coverStyle"
+            :side="study.side"
+            :collector-number="collectorNumber"
+          />
+          <h2 class="line-clamp-4 px-5 pt-6 pb-4 text-lg leading-snug font-medium text-balance">
             {{ study.name }}
           </h2>
-          <div :id="detailsId" class="mt-auto space-y-3 p-4">
+          <div :id="detailsId" class="mt-auto flex flex-col gap-3 p-4 pb-5">
             <StudyImportProgress
               v-if="isImporting"
               class="**:data-[slot=progress]:bg-black/10 [&_p]:text-neutral-600"
             />
-            <p class="text-xs text-neutral-700 tabular-nums">
-              {{ study.chapterCount }} {{ study.chapterCount === 1 ? "chapter" : "chapters" }} · {{ study.lineCount }}
-              {{ study.lineCount === 1 ? "line" : "lines"
-              }}<span v-if="study.side" class="sr-only">. {{ SIDE_LABELS[study.side] }}</span>
-            </p>
+            <dl
+              class="relative grid grid-cols-2 pt-2 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-(--tint) before:[mask-image:linear-gradient(to_right,transparent,rgb(0_0_0/0.5)_30%,rgb(0_0_0/0.5)_70%,transparent)] after:absolute after:top-0 after:-bottom-2.5 after:left-1/2 after:w-px after:bg-(--tint) after:[mask-image:linear-gradient(rgb(0_0_0/0.5),transparent)]"
+              :style="{ '--tint': colors.tint, '--ink': colors.ink }"
+            >
+              <div v-for="stat in stats" :key="stat.label" class="flex flex-col-reverse items-center gap-1">
+                <dt class="text-[0.5625rem] leading-none font-medium tracking-wider text-(--ink) uppercase">
+                  {{ stat.label }}
+                </dt>
+                <dd class="text-base leading-none font-medium tabular-nums">{{ stat.value }}</dd>
+              </div>
+            </dl>
+            <p v-if="study.side" class="sr-only">{{ SIDE_LABELS[study.side] }}</p>
           </div>
           <RouterLink
             :to="`/studies/${study.id}`"
@@ -66,7 +78,7 @@ import StudyCover from "@components/studies/StudyCover.vue";
 import StudyImportProgress from "@components/studies/StudyImportProgress.vue";
 import { Ellipsis, FileUp, Pencil, Trash2 } from "@lucide/vue";
 import { useStudyImport } from "@stores/useStudyImport";
-import { StudyCoverStyle } from "@utilities/studyCover";
+import { coverColors, StudyCoverStyle } from "@utilities/studyCover";
 import { computed, useId, useTemplateRef } from "vue";
 import { Button } from "@/components/ui/button";
 import {
@@ -78,7 +90,7 @@ import {
 } from "@/components/ui/context-menu";
 import { StudySummary } from "@/types";
 
-const props = defineProps<{ study: StudySummary; coverStyle: StudyCoverStyle }>();
+const props = defineProps<{ study: StudySummary; coverStyle: StudyCoverStyle; collectorNumber: string }>();
 const emit = defineEmits<{ delete: [] }>();
 
 const SIDE_LABELS: Record<NonNullable<StudySummary["side"]>, string> = {
@@ -91,6 +103,11 @@ const card = useTemplateRef("card");
 const detailsId = useId();
 const studyImport = useStudyImport();
 const isImporting = computed(() => studyImport.job?.studyId === props.study.id);
+const colors = computed(() => coverColors(props.coverStyle.hue));
+const stats = computed(() => [
+  { label: props.study.chapterCount === 1 ? "Chapter" : "Chapters", value: props.study.chapterCount },
+  { label: props.study.lineCount === 1 ? "Line" : "Lines", value: props.study.lineCount },
+]);
 
 // The context menu only opens from a contextmenu event, which keyboards on macOS can't send.
 function openMenuAt(anchor: HTMLElement) {
