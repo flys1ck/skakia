@@ -17,8 +17,8 @@
 import SettingsAccounts from "@components/settings/SettingsAccounts.vue";
 import SettingsGroup from "@components/settings/SettingsGroup.vue";
 import SettingsRow from "@components/settings/SettingsRow.vue";
+import { EXTENSION_STORES } from "@data/extensionStores";
 import { ExternalLink } from "@lucide/vue";
-import { EXTENSION_STORES } from "@stores/useExtensionPromo";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Button } from "@/components/ui/button";
 </script>

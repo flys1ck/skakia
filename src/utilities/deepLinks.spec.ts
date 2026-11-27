@@ -1,5 +1,3 @@
-import { useExtensionPromo } from "@stores/useExtensionPromo";
-import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Router } from "vue-router";
 import { initDeepLinks, parseAppDeepLink, parseOAuthCallback } from "./deepLinks";
@@ -27,38 +25,33 @@ describe("initDeepLinks", () => {
   const router = { push } as unknown as Router;
 
   beforeEach(() => {
-    setActivePinia(createPinia());
     push.mockClear();
     deepLink.launchUrls = null;
     deepLink.handler = undefined;
   });
 
-  it("opens the game the app was launched with and remembers that the extension is in use", async () => {
+  it("opens the game the app was launched with", async () => {
     deepLink.launchUrls = [GAME_LINK];
 
     await initDeepLinks(router);
 
     expect(push).toHaveBeenCalledWith("/games/lichess/9SZSSje9");
-    expect(useExtensionPromo().hasOpenedGameLink).toBe(true);
   });
 
   it("opens a game link that arrives while the app is running", async () => {
     await initDeepLinks(router);
-    expect(useExtensionPromo().hasOpenedGameLink).toBe(false);
 
     await deepLink.handler?.([GAME_LINK]);
 
     expect(push).toHaveBeenCalledWith("/games/lichess/9SZSSje9");
-    expect(useExtensionPromo().hasOpenedGameLink).toBe(true);
   });
 
-  it("does not count an OAuth callback as a game link", async () => {
+  it("ignores an OAuth callback", async () => {
     await initDeepLinks(router);
 
     await deepLink.handler?.([OAUTH_LINK]);
 
     expect(push).not.toHaveBeenCalled();
-    expect(useExtensionPromo().hasOpenedGameLink).toBe(false);
   });
 });
 
