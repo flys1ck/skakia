@@ -99,7 +99,7 @@ describe("useStudyImport", () => {
     const studyImport = useStudyImport();
     deferredInvoke();
 
-    void studyImport.start({ type: "newStudy", name: "Janowski", description: null }, plan, "Janowski");
+    void studyImport.start({ type: "newStudy", name: "Janowski", authors: [] }, plan, "Janowski");
 
     expect(studyImport.job?.studyId).toBeUndefined();
   });
