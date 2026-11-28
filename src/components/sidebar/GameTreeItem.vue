@@ -8,7 +8,7 @@
       <button
         :data-node-id="node.id"
         class="col-span-7 py-0.5 pl-4 text-left font-light"
-        :class="node.id === activeNodeId ? 'bg-primary/30' : 'hover:bg-muted'"
+        :class="node.id === activeNodeId ? 'bg-foreground/10' : 'hover:bg-muted'"
         @click="$emit('nodeselect', node)"
       >
         {{ node.move.san }}{{ formatAnnotations(node.move.annotations) }}
@@ -30,7 +30,7 @@
       <button
         :data-node-id="node.id"
         class="col-span-7 py-0.5 pl-4 text-left font-light"
-        :class="node.id === activeNodeId ? 'bg-primary/30' : 'hover:bg-muted'"
+        :class="node.id === activeNodeId ? 'bg-foreground/10' : 'hover:bg-muted'"
         @click="$emit('nodeselect', node)"
       >
         {{ node.move.san }}{{ formatAnnotations(node.move.annotations) }}
@@ -41,7 +41,7 @@
       <button
         :data-node-id="node.id"
         class="col-span-7 py-0.5 pl-4 text-left font-light"
-        :class="node.id === activeNodeId ? 'bg-primary/30' : 'hover:bg-muted'"
+        :class="node.id === activeNodeId ? 'bg-foreground/10' : 'hover:bg-muted'"
         @click="$emit('nodeselect', node)"
       >
         {{ node.move.san }}{{ formatAnnotations(node.move.annotations) }}
@@ -62,7 +62,7 @@
             'left-0 border-l-4': node.move?.piece.color === 'white',
             'right-0 border-r-4': node.move?.piece.color === 'black',
           },
-          node.id === activeNodeId ? 'border-primary/60' : 'border-muted-foreground/20',
+          node.id === activeNodeId ? 'border-foreground/40' : 'border-muted-foreground/20',
         ]"
         aria-hidden
       />

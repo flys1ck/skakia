@@ -39,12 +39,12 @@
           <li v-for="line in chapter.lines" :key="line.line_id">
             <RouterLink
               :to="`/studies/${line.study_id}/chapters/${line.chapter_id}/lines/${line.line_id}/#${encodeURIComponent(line.position_key)}`"
-              class="hover:bg-primary/15 block truncate px-4 py-1 text-sm"
+              class="hover:bg-muted block truncate px-4 py-1 text-sm"
               :title="line.line_name"
               @pointermove="
                 () =>
                   game.setAutoShapes(
-                    [{ brush: 'paleBlue', orig: line.source as Key, dest: line.destination as Key }],
+                    [{ brush: 'paleTeal', orig: line.source as Key, dest: line.destination as Key }],
                     'temporary'
                   )
               "

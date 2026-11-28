@@ -5,7 +5,9 @@
       v-if="lineNode.move"
       :data-node-id="lineNode.id"
       class="text-primary relative inline-flex gap-0.5 rounded-sm border px-px font-bold"
-      :class="lineNode.id === activeNodeId ? 'border-primary/60 bg-primary/10' : 'hover:bg-muted border-transparent'"
+      :class="
+        lineNode.id === activeNodeId ? 'border-foreground/25 bg-foreground/10' : 'hover:bg-muted border-transparent'
+      "
       @click="$emit('nodeselect', lineNode)"
     >
       <span v-if="moveNumberLabel">{{ moveNumberLabel }}</span>

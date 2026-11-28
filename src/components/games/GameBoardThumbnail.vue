@@ -1,5 +1,5 @@
 <template>
-  <div ref="boardRef" class="aspect-square overflow-hidden rounded-sm"></div>
+  <div ref="boardRef" class="aspect-square [--board-radius:var(--radius-sm)]"></div>
 </template>
 
 <script setup lang="ts">
