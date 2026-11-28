@@ -4,7 +4,7 @@
     <button
       v-if="lineNode.move"
       :data-node-id="lineNode.id"
-      class="text-primary relative inline-flex gap-0.5 rounded-sm border px-px font-bold"
+      class="text-primary relative inline-flex gap-0.5 rounded-sm border px-px"
       :class="
         lineNode.id === activeNodeId ? 'border-foreground/25 bg-foreground/10' : 'hover:bg-muted border-transparent'
       "
