@@ -38,7 +38,7 @@
             <RouterLink
               :to="`/studies/${studyId}/chapters/${chapter.id}/lines/${line.id}`"
               class="focus-visible:ring-ring/50 flex flex-col rounded-md px-2 py-1 outline-none focus-visible:ring-3"
-              :class="line.id === activeLineId ? 'bg-primary/15 text-foreground' : 'hover:bg-muted'"
+              :class="line.id === activeLineId ? 'bg-foreground/10 text-foreground' : 'hover:bg-muted'"
               :data-active="line.id === activeLineId || undefined"
             >
               <span class="truncate" :class="{ 'font-medium': line.id === activeLineId }" :title="line.name">{{

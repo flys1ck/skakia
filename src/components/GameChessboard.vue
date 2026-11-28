@@ -1,10 +1,10 @@
 <template>
   <div class="relative">
-    <div ref="chessboardRef" class="aspect-square"></div>
+    <div ref="chessboardRef" class="board-card aspect-square"></div>
     <!-- promotion overlay -->
     <div
       v-if="game.isPromoting.value"
-      class="absolute top-0 left-0 z-10 bg-black/70"
+      class="absolute top-0 left-0 z-10 rounded-(--board-radius) bg-black/70"
       :style="overlayStyle"
       @click="game.cancelPromotion"
     >
@@ -13,7 +13,7 @@
           <button
             v-for="piece in ['queen', 'rook', 'bishop', 'knight']"
             :key="piece"
-            class="bg-muted hover:bg-primary aspect-square w-full scale-90 rounded-sm"
+            class="bg-muted hover:bg-card aspect-square w-full scale-90 rounded-sm"
             @click.stop="game.promote(piece as PromotionPiece)"
           >
             <div :class="`${game.promotionColor.value} ${piece} h-full w-full bg-cover`" />
@@ -105,4 +105,16 @@ watch(
 
 <style>
 @import "./../assets/css/chessground.css";
+
+/* Chessground rounds the board down to whole-pixel squares, so it can end a few pixels short of the wrapper. */
+.board-card cg-container {
+  border-radius: var(--board-radius);
+  box-shadow:
+    0 2px 4px oklch(0.4 0.08 15 / 8%),
+    0 12px 32px oklch(0.4 0.08 15 / 16%);
+}
+
+[data-theme="dark"] .board-card cg-container {
+  box-shadow: 0 10px 30px oklch(0 0 0 / 45%);
+}
 </style>

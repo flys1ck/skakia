@@ -181,7 +181,7 @@ function setBestMoveArrows(bestMoves: { score: string; from: Key; to: Key }[]) {
   const shapes: DrawShape[] = bestMoves.map((bestMove, i) => ({
     orig: bestMove.from,
     dest: bestMove.to,
-    brush: i === 0 ? "paleBlue" : "paleGrey",
+    brush: i === 0 ? "paleTeal" : "paleGrey",
     label: {
       text: bestMove.score,
     },

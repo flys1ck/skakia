@@ -32,6 +32,17 @@ export function useChessground(element: HTMLElement, options: UseChessgroundOpti
     events: {
       move: options.onMove,
     },
+    drawable: {
+      // Brush colors land in SVG attributes, where CSS variables do not resolve.
+      // Arrows drawn by hand use the "green" brush, so it carries the board's teal arrow color.
+      brushes: {
+        green: { key: "g", color: "#1f6f6b", opacity: 1, lineWidth: 10 },
+        red: { key: "r", color: "#882020", opacity: 1, lineWidth: 10 },
+        blue: { key: "b", color: "#003088", opacity: 1, lineWidth: 10 },
+        yellow: { key: "y", color: "#e68f00", opacity: 1, lineWidth: 10 },
+        paleTeal: { key: "pt", color: "#1f6f6b", opacity: 0.5, lineWidth: 15 },
+      },
+    },
   });
 
   // Chessground caches the board rect and only refreshes it on resize or scroll. A board that moves without
